@@ -5,6 +5,10 @@ This is a 2-player implementation of chess playable in a browser. It is a rework
 
 ## How to Play
 
+Sample Player credentials:
+Email: player@example.com
+Password: password
+
 ## Technical Description
 
 Rails: 

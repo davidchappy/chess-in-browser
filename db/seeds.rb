@@ -6,7 +6,16 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-p = Player.create(email: "player@example.com", 
-                  name: "Sample Player", 
+p = Player.create(email: "white@example.com", 
+                  name: "Sample White", 
                   password: "password", 
                   password_confirmation: "password")
+
+p2 = Player.create(email: "black@example.com",
+                  name: "Sample Black",
+                  password: "password", 
+                  password_confirmation: "password")
+
+g = Game.create(white_player: p,
+                black_player: p2,
+                status: "saved")

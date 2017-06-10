@@ -1,8 +1,11 @@
 class Game < ApplicationRecord
-  belongs_to :white_player, class_name: "Player", foreign_key: "white_id"
-  belongs_to :black_player, class_name: "Player", foreign_key: "black_id"
+  belongs_to :white, polymorphic: true
+  belongs_to :black, polymorphic: true
   has_many   :pieces, dependent: :destroy
 
   validates_inclusion_of :status,
     in: ["starting", "saved", "playing", "check", "check_mate"]
+
+  validates_inclusion_of :black_type, in: ["Guest", "User"]
+  validates_inclusion_of :white_type, in: ["Guest", "User"]
 end

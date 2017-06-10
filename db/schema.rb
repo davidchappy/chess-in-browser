@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170609203105) do
+ActiveRecord::Schema.define(version: 20170610211224) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,15 @@ ActiveRecord::Schema.define(version: 20170609203105) do
     t.string "status"
     t.integer "white_id"
     t.integer "black_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "black_type"
+    t.string "white_type"
+  end
+
+  create_table "guests", force: :cascade do |t|
+    t.string "name"
+    t.boolean "is_playing", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

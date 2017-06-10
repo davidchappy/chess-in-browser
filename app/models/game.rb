@@ -4,5 +4,5 @@ class Game < ApplicationRecord
   has_many   :pieces, dependent: :destroy
 
   validates_inclusion_of :status,
-    in: ["saved", "playing", "check", "check_mate"]
+    in: ["starting", "saved", "playing", "check", "check_mate"]
 end

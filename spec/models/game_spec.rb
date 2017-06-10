@@ -10,5 +10,5 @@ RSpec.describe Game, type: :model do
   it { should have_many(:pieces).dependent(:destroy) }
   # validation tests
   # ensure presence of name 
-  it { should validate_inclusion_of(:status).in_array(["saved", "playing", "check", "check_mate"]) }
+  it { should validate_inclusion_of(:status).in_array(["starting", "saved", "playing", "check", "check_mate"]) }
 end

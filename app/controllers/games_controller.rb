@@ -1,27 +1,46 @@
 class GamesController < ApplicationController
-  include GamePrep
+  include GameHelpers
 
   def create
     # Determine if Player vs. Player, Player vs. Guest, or Guest vs. Guest
-    if false
+    if params[:player1_id] && params[:player2_id]
       ## Player vs. Player (2 users via socket connection)
-    elsif false
+      # player1 = Player.find(params[:player1_id])
+      # player2 = Player.find(params[:player2_id])
+      # @white, @black = [player1, player2].shuffle
+    elsif params[:player1_id] && params[:guest1]
       ## Player vs. Guest (hotseat as user)
+      # player1 = Player.find(params[:player1_id])
+      # player2 = Guest.create(name: params[:guest2])
+      # @white, @black = [player1, player2].shuffle
     else
       ## Guest vs. Guest (hotseat as guest)
-      players = create_guests(params[:guest1], params[:guest2])
-      @white, @black = players
+      @white, @black = create_guests(params[:guest1], params[:guest2])
     end
 
     # Create game and respond
-    @game = Game.create( white: @white,  black: @black, status: "starting" )
-    generate_pieces(@game)
-    json_response(Chess::Game.new(@game))
+    raw_game = Game.create!( white: @white,  black: @black, status: "starting" )
+    @game = set_status(Chess::Game.start(raw_game))
+    response = {
+      game: @game,
+      white: serialize(@white, :pieces),
+      black: serialize(@black, :pieces)
+    }
+
+    render json: response
   end
 
   private
 
+    def set_status(game)
+      game.status = "playing"
+      game.save!
+      game.white.is_playing = true
+      game.white.save!
+      game
+    end
+
     def games_params
-      params.permit(:guest1, :guest2, :player1_id)
+      params.permit(:guest1, :guest2, :player1_id, :player2_id)
     end
 end

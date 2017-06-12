@@ -1,20 +1,18 @@
 require "rails_helper"
 
 RSpec.describe GamesController, :type => :controller do
-  let!(:guest1) { create(:white_guest) }
-  let!(:guest2) { create(:black_guest) }
-  # let(:player1) { create(:player) }
-  # let(:player2) { create(:player) }
-  let(:game) { Game.create(white: guest1, black: guest2, status: "starting") }
 
-  describe '#generate_pawns' do
-    before { generate_pawns(game) }
+  describe '#create_guests' do
+    let!(:guests) { subject.create_guests("Susy", "Joanna") }
+      
+    it "returns an array of guest objects" do
+      expect(guests).to be_a(Array)
+      expect(guests[0]).to be_a(Guest)
+    end  
 
-    it "should add pawn objects to a game object" do
-      expect(game.pieces).to_not be_nil
-      expect(game.white.pieces).to_not be_nil
-      expect(game.black.pieces).to_not be_nil
-      expect(generate_pawns(game)).to_not be_nil
+    it "creates two objects with given names" do
+      expect(Guest.all.length).to eq(2)
+      expect(["Susy", "Joanna"]).to include(Guest.last.name)
     end
   end
 

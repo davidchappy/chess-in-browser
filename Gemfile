@@ -7,7 +7,6 @@ end
 
 gem 'devise'
 gem 'rb-readline', '~> 0.5.3'
-gem 'jsonapi-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.1'

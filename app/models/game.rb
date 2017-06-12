@@ -1,4 +1,8 @@
 class Game < ApplicationRecord
+  include GamePrep
+  include PieceMethods
+  after_create :generate
+
   belongs_to :white, polymorphic: true
   belongs_to :black, polymorphic: true
   has_many   :pieces, dependent: :destroy
@@ -8,4 +12,10 @@ class Game < ApplicationRecord
 
   validates_inclusion_of :black_type, in: ["Guest", "User"]
   validates_inclusion_of :white_type, in: ["Guest", "User"]
+
+  private 
+
+    def generate
+      generate_pieces(self)
+    end
 end

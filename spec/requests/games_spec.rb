@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe "Game Requests", :type => :request do
   # Create sample players
   let(:names) { ["Guest Player One", "Guest Player Two"]}
-  let!(:guest_params) do 
-    { guest1_name: names[0], guest2_name: names[1] } 
+  let(:guest_params) do 
+    { guest1: names[0], guest2: names[1] } 
   end  
 
   # When game is requested as a guest player

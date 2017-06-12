@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  include GamePrep
 
   def create
     # Determine if Player vs. Player, Player vs. Guest, or Guest vs. Guest

@@ -26,6 +26,8 @@ module ChessInBrowser
     # -- all .rb files in that directory are automatically loaded.
 
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '{*/}')]
+    config.autoload_paths += %W(#{config.root}/app/lib)
+    config.autoload_paths += Dir["#{config.root}/app/lib/**/"]
 
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.

@@ -6,26 +6,20 @@ class GamesController < ApplicationController
     # Determine if Player vs. Player, Player vs. Guest, or Guest vs. Guest
     if params[:player1_id] && params[:player2_id]
       ## Player vs. Player (2 users via socket connection)
-      # player1 = Player.find(params[:player1_id])
-      # player2 = Player.find(params[:player2_id])
-      # @white, @black = [player1, player2].shuffle
     elsif params[:player1_id] && params[:guest1]
       ## Player vs. Guest (hotseat as user)
-      # player1 = Player.find(params[:player1_id])
-      # player2 = Guest.create(name: params[:guest2])
-      # @white, @black = [player1, player2].shuffle
     else
       ## Guest vs. Guest (hotseat as guest)
-      @white, @black = create_guests(params[:guest1], params[:guest2])
+      white, black = create_guests(params[:guest1], params[:guest2])
     end
 
     # Create game and respond
-    raw_game = Game.create!( white: @white,  black: @black, status: "starting" )
-    @game = set_status(Chess::Game.start(raw_game))
+    @game, @white, @black = Game.start(white, black)
+    set_status(@game)
     response = {
       game: @game,
-      white: serialize(@white, :pieces),
-      black: serialize(@black, :pieces)
+      white: serialize(@white, "pieces"),
+      black: serialize(@black, "pieces")
     }
     render json: response
   end
@@ -43,14 +37,6 @@ class GamesController < ApplicationController
   end
 
   private
-
-    def set_status(game)
-      game.status = "playing"
-      game.save!
-      game.white.is_playing = true
-      game.white.save!
-      game
-    end
 
     def games_params
       params.permit(:guest1, :guest2, :player1_id, :player2_id)

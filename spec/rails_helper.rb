@@ -42,7 +42,9 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
   # add helper methods to request specs
+  config.include ActionController::Helpers
   config.include RequestSpecHelpers, type: :request
+  config.include GameHelpers, type: :controller
 
   # start by truncating all the tables but then use the faster transaction strategy the rest of the time.
   config.before(:suite) do

@@ -10,10 +10,10 @@ module Chess
       game
     end
 
-    # def self.update(game, positions)
-    #   chess_game = self.new
-    #   chess_game.place_pieces(game, positions)
-    # end
+    def self.update(game, positions)
+      chess_game = self.new
+      chess_game.place_pieces(game, positions)
+    end
 
     def place_pieces(game, positions)
       [game.white.pieces, game.black.pieces].each do |color|

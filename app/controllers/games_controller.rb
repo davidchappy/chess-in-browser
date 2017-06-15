@@ -30,8 +30,8 @@ class GamesController < ApplicationController
     @black = @game.black
     response = {
       game: @game,
-      white: serialize(@white, :pieces),
-      black: serialize(@black, :pieces)
+      white: serialize(@white, "pieces"),
+      black: serialize(@black, "pieces")
     }
     render json: response
   end

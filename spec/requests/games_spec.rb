@@ -18,6 +18,13 @@ RSpec.describe "Game Requests", :type => :request do
         expect(json['game']['status']).to eq('playing')
       end
 
+      it "returns a game board with pieces" do
+        expect(json['game']['board']).to_not be_nil
+        expect(json['game']['board']).to_not be_empty
+        expect(json['game']['board']['a8']['name']).to eq('black-r1')
+        expect(json['game']['board']['f1']['name']).to eq('white-b2')
+      end
+
       it "returns two guest players" do
         white = json['white']
         expect(white).to_not be_nil
@@ -38,6 +45,8 @@ RSpec.describe "Game Requests", :type => :request do
         expect(json['white']['pieces'].first).not_to eq("unplaced")
         expect(json['black']['pieces'].first).not_to eq("unplaced")
       end
+
+ 
     end
 
   end

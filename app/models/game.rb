@@ -2,6 +2,7 @@ class Game < ApplicationRecord
   include GamePrep
   include PieceMethods
   after_create :generate
+  serialize :board
 
   # Associations
   belongs_to :white, polymorphic: true
@@ -16,16 +17,15 @@ class Game < ApplicationRecord
 
   def self.start(white, black)
     game = Game.create!(white: white, black: black, status: "starting")
-    
-    Chess::Game.place_pieces(game.white.pieces, :white).each(&:save!)
-    Chess::Game.place_pieces(game.black.pieces, :black).each(&:save!)
-
     [game, game.white, game.black]
   end
 
-  private 
+  private
 
     def generate
       generate_pieces(self)
+      add_pieces(self)
+      fill_board(self)
     end
+
 end

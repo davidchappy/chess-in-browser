@@ -15,7 +15,6 @@ class GamesController < ApplicationController
 
     # Create game and respond
     @game, @white, @black = Game.start(white, black)
-    set_status(@game)
     render json: game_response
   end
 
@@ -26,16 +25,15 @@ class GamesController < ApplicationController
   end
 
   def update
-    @game = Chess::Game.update(@game, params[:move])
-    @white = @game.white
-    @black = @game.black
+    @game, @white, @black = Game.update(@game, params[:move])
     render json: game_response
+    # render json: params
   end
 
   private
 
     def games_params
-      params.permit(:guest1, :guest2, :player1_id, :player2_id)
+      params.permit(:guest1, :guest2, :player1_id, :player2_id, :move)
     end
 
     def set_game

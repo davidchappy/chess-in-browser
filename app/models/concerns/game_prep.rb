@@ -38,7 +38,7 @@ module GamePrep
 
     def create_piece(player, game, type, color, suffix)
       player.pieces.create( game: game, type: type, 
-                            color: color, name: color+"-" + suffix)
+                            color: color, name: color + "-" + suffix)
     end
 
 end

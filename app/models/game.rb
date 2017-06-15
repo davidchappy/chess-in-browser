@@ -1,6 +1,7 @@
 class Game < ApplicationRecord
   include GamePrep
   include PieceMethods
+  include Turns
   after_create :generate
   serialize :board
 
@@ -20,12 +21,28 @@ class Game < ApplicationRecord
     [game, game.white, game.black]
   end
 
+  def self.update(game, move)
+    game = Chess::Game.update(game.board, move)
+    # update game.board with move
+      # check? check mate?
+      # en passant?
+      # castling?
+      # capture?
+      # promotion?
+    # update game.white.pieces with move
+    # update game.black.pieces with move
+    # switch turn
+    [game, game.white, game.black]
+  end
+
   private
 
     def generate
       generate_pieces(self)
       add_pieces(self)
       fill_board(self)
+      set_status(self, "playing")
+      set_turn(self.white, self.black)
     end
 
 end

@@ -17,6 +17,13 @@ module Chess
       pieces
     end
 
+    def self.fill_board(game)
+      game.board = generate_board
+      pieces = game.white.pieces + game.black.pieces
+      add_pieces_to_board(game.board, pieces)
+      game 
+    end
+
     # Private
     
     class << self
@@ -47,6 +54,30 @@ module Chess
           mapped_positions[piece.id] = position
         end
         mapped_positions
+      end
+
+      def generate_board
+        board = {}
+        8.downto(1).each do |number|
+          fill_row(number, board)
+        end
+        board
+      end
+
+      def fill_row(num, board)
+        letters=("a".."h")
+        letters.to_a.each do |letter|
+          board[(letter + num.to_s).to_sym] = ""
+        end
+      end
+
+      def add_pieces_to_board(board, pieces)
+        pieces.each do |piece|
+        position = piece.position.to_sym
+        if board.keys.include?(position) 
+            board[position] = piece
+          end
+        end
       end
 
     end

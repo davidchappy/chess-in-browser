@@ -18,7 +18,7 @@ module GamePrep
     game.save!
   end
 
-  def add_pieces(game)
+  def place_pieces(game)
     Chess::Game.place_pieces(game.white.pieces, :white).each(&:save!)
     Chess::Game.place_pieces(game.black.pieces, :black).each(&:save!)
   end

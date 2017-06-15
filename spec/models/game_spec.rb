@@ -32,21 +32,6 @@ RSpec.describe Game, type: :model do
         expect(game[1]).to be_a(Guest)
         expect(game[2]).to be_a(Guest)
       end
-
-      it "should add positions to pieces and save them" do
-        white = Guest.find(game[1].id)
-        black = Guest.find(game[2].id)
-        
-        expect(white.pieces).to_not be_empty
-        white.pieces.each do |piece|
-          expect(piece.position).to_not eq("unplaced")
-        end
-        
-        expect(black.pieces).to_not be_empty
-        black.pieces.each do |piece|
-          expect(piece.position).to_not eq("unplaced")
-        end
-      end
     end
 
   end

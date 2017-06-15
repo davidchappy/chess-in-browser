@@ -3,9 +3,8 @@ module Chess
   class Game
     include PieceMethods
 
-    def self.update(game, positions)
-      chess_game = self.new
-      chess_game.place_pieces(game, positions)
+    def self.test(string)
+      puts string
     end
 
     def self.place_pieces(pieces, color)
@@ -22,6 +21,16 @@ module Chess
       pieces = game.white.pieces + game.black.pieces
       add_pieces_to_board(game.board, pieces)
       game 
+    end
+
+    def self.update(game, move)
+      # update game.board with move
+        # check? check mate?
+        # en passant?
+        # castling?
+        # capture?
+        # promotion?
+      chess_game.place_pieces(game, positions)
     end
 
     # Private

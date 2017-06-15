@@ -3,6 +3,7 @@ class Game < ApplicationRecord
   include PieceMethods
   include Turns
   after_create :generate
+  # after_update :update
   serialize :board
 
   # Associations
@@ -22,13 +23,7 @@ class Game < ApplicationRecord
   end
 
   def self.update(game, move)
-    game = Chess::Game.update(game.board, move)
-    # update game.board with move
-      # check? check mate?
-      # en passant?
-      # castling?
-      # capture?
-      # promotion?
+    game = Chess::Game.update(game.board, move).save!
     # update game.white.pieces with move
     # update game.black.pieces with move
     # switch turn
@@ -39,10 +34,14 @@ class Game < ApplicationRecord
 
     def generate
       generate_pieces(self)
-      add_pieces(self)
+      place_pieces(self)
       fill_board(self)
       set_status(self, "playing")
       set_turn(self.white, self.black)
+    end
+
+    def update
+      Chess::Game.test("Hello from Chess::Game")
     end
 
 end

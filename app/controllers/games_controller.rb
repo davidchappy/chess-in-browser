@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   include GameHelpers
-  before_action :set_game, only: [:show]
+  before_action :set_game, only: [:show, :update]
 
   def create
     # Determine if Player vs. Player, Player vs. Guest, or Guest vs. Guest

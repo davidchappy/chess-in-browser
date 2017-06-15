@@ -16,34 +16,20 @@ class GamesController < ApplicationController
     # Create game and respond
     @game, @white, @black = Game.start(white, black)
     set_status(@game)
-    response = {
-      game: @game,
-      white: serialize(@white, "pieces"),
-      black: serialize(@black, "pieces")
-    }
-    render json: response
+    render json: game_response
   end
 
   def show
     @white = @game.white
     @black = @game.black
-    response = {
-      game: @game,
-      white: serialize(@white, "pieces"),
-      black: serialize(@black, "pieces")
-    }
-    render json: response
+    render json: game_response
   end
 
   def update
     @game = Chess::Game.update(@game, params[:move])
+    @white = @game.white
     @black = @game.black
-    response = {
-      game: @game,
-      white: serialize(@white, "pieces"),
-      black: serialize(@black, "pieces")
-    }
-    render json: response
+    render json: game_response
   end
 
   private
@@ -54,5 +40,13 @@ class GamesController < ApplicationController
 
     def set_game
       @game = Game.find(params[:id])
+    end
+
+    def game_response
+      response = {
+        game: @game,
+        white: serialize(@white, "pieces"),
+        black: serialize(@black, "pieces")
+      }
     end
 end

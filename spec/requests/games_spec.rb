@@ -45,11 +45,24 @@ RSpec.describe "Game Requests", :type => :request do
         expect(json['white']['pieces'].first).not_to eq("unplaced")
         expect(json['black']['pieces'].first).not_to eq("unplaced")
       end
+    end
 
- 
+    describe 'GET /api/games/:id' do
+      # let(:game) { create(:game) }
+
+      # before do 
+      #   id = game.id
+      #   get "/api/games/#{id}" 
+      # end
+
+      # it "returns a game" do
+      #   expect(json).not_to be_empty
+      #   expect(json).not_to be_nil
+      #   expect(json['game']['status']).to eq('playing')
+      # end
+
     end
 
   end
-
   # When game is requested as a valid user
 end

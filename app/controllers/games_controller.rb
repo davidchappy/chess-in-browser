@@ -25,8 +25,18 @@ class GamesController < ApplicationController
   end
 
   def show
-    @game = Chess::Game.update(@game, params[:position_changes])
     @white = @game.white
+    @black = @game.black
+    response = {
+      game: @game,
+      white: serialize(@white, "pieces"),
+      black: serialize(@black, "pieces")
+    }
+    render json: response
+  end
+
+  def update
+    @game = Chess::Game.update(@game, params[:move])
     @black = @game.black
     response = {
       game: @game,

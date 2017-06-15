@@ -10,19 +10,15 @@ module Turns
     if white.is_playing
       white.is_playing = false
       black.is_playing = true
-      white.save!
-      black.save!
     elsif black.is_playing
       white.is_playing = true
       black.is_playing = false
-      white.save!
-      black.save!
     else 
       white.is_playing = true
       black.is_playing = false
-      white.save!
-      black.save!
     end
+    white.save!
+    black.save!
   end
 
 end

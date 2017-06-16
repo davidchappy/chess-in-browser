@@ -16,6 +16,10 @@ RSpec.describe GamePrep do
       expect(game.black.pieces.length).to eq(16)
     end
 
+    it "assigns a color to each piece" do
+      
+    end
+
     it "properly creates db records" do
       expect(Game.last.pieces.length).to eq(32)
       expect(Game.last.white.pieces.length).to eq(16)
@@ -45,7 +49,7 @@ RSpec.describe GamePrep do
     end
   end
 
-  describe '#fill_board' do
+  describe '#init_board' do
     it 'fills game.board' do
       expect(game.board).to_not be_nil
       expect(game.board).to_not be_empty

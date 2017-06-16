@@ -1,5 +1,6 @@
 # require database cleaner at the top level
 require 'database_cleaner'
+require 'yaml'
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
@@ -44,8 +45,8 @@ RSpec.configure do |config|
   # add helper methods to specs
   config.include ActionController::Helpers
   config.include RequestSpecHelpers, type: :request
+  config.include GameSpecHelpers
   config.include GameHelpers, type: :controller
-  config.include Turns
 
   # start by truncating all the tables but then use the faster transaction strategy the rest of the time.
   config.before(:suite) do

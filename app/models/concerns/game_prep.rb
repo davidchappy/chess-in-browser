@@ -19,12 +19,12 @@ module GamePrep
   end
 
   def place_pieces(game)
-    Chess::Game.place_pieces(game.white.pieces, :white).each(&:save!)
-    Chess::Game.place_pieces(game.black.pieces, :black).each(&:save!)
+    Chess::Game.place_pieces(game.white.pieces).each(&:save!)
+    Chess::Game.place_pieces(game.black.pieces).each(&:save!)
   end
 
-  def fill_board(game)
-    Chess::Game.fill_board(game).save!
+  def init_board(game)
+    Chess::Game.init_board(game).save!
   end
 
   private 

@@ -19,13 +19,12 @@ class GamesController < ApplicationController
   end
 
   def show
-    @white = @game.white
-    @black = @game.black
+    @white, @black = [@game.white, @game.black]
     render json: game_response
   end
 
   def update
-    @game, @white, @black = Game.update(@game, params[:move])
+    @game, @white, @black = @game.update(params[:move])
     render json: game_response
     # render json: params
   end

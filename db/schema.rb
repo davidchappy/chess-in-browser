@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170615205317) do
+ActiveRecord::Schema.define(version: 20170617152324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,15 @@ ActiveRecord::Schema.define(version: 20170615205317) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "moves", force: :cascade do |t|
+    t.string "flags"
+    t.string "to"
+    t.bigint "piece_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["piece_id"], name: "index_moves_on_piece_id"
+  end
+
   create_table "pieces", force: :cascade do |t|
     t.string "position", default: "unplaced"
     t.string "type"
@@ -42,7 +51,6 @@ ActiveRecord::Schema.define(version: 20170615205317) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "player_type"
-    t.string "available_moves"
     t.string "name"
     t.string "color"
     t.boolean "has_moved", default: false

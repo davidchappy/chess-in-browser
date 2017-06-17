@@ -47,16 +47,34 @@ RSpec.describe Chess::Game do
   end
 
   describe '.get_moves' do
-    # fills each player's piece with legal moves
+    let(:moves) { Chess::Game.get_moves(valid_game) }
     
-    # iterate through each player's piece
-    # loop through each tile of game.board
-    # check if that tile is a possible move for that piece
-    
+    it "returns a hash with piece names as keys" do
+      expect(moves).to be_a(Hash)
+      expect(moves.length).to eq(32)
+
+      expect(moves['white-p4']).to_not be_nil
+      expect(moves['black-n2']).to_not be_nil
+      expect(moves['white-k']).to_not be_nil
+    end
+
+    it "returns arrays of moves for each piece" do
+      expect(moves['white-p4']).to be_a(Array)
+      expect(moves['white-p4']).to include("d3")
+
+      expect(moves['black-n2']).to be_a(Array)
+      expect(moves['black-n2']).to include("h6")
+
+      expect(moves['white-k']).to be_a(Array)
+      expect(moves['white-k']).to be_empty
+    end    
+  end
+
+  describe '.update_board' do
+    let(:updated_board) { Chess::Game.update_board(valid_game) }
+
     it "" do
     end
-    
-    
   end
 
 end

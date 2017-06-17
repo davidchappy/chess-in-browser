@@ -10,11 +10,9 @@ RSpec.describe Chess::Piece do
   let(:king)   { valid_game.white.pieces.where(name: "white-k").take }
   let(:queen)  { valid_game.white.pieces.where(name: "white-q").take }
 
-  describe '.possible_move' do
-    it 'returns true if move is possible and false if not' do
-      puts "piece class"
-      p described_class
-      expect(described_class.possible_move?("a3", valid_game.board, pawn)).to eq(true)
+  describe '.process_move' do
+    it 'returns hash of move with flags/empty string as values' do
+      expect(described_class.process_move("a3", valid_game.board, pawn)).to eq("a3"=>"")
     end
   end
 

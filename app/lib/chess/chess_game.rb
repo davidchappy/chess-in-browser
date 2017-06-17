@@ -28,8 +28,9 @@ module Chess
         player.pieces.each do |piece|
           all_moves[piece.name] = {}
           game.board.each do |tile, content|
-            if Chess::Piece.possible_move?(tile, game.board, piece)
-              all_moves[piece.name][tile.to_s] = "" 
+            move = Chess::Piece.process_move(tile, game.board, piece)
+            if move
+              all_moves[piece.name].merge!(move)  
             end
           end
         end
@@ -64,9 +65,10 @@ module Chess
         return map_piece_positions(pieces, positions)
       end   
 
+      # Returns hash where keys = piece ids, values = tile positions
       def map_piece_positions(pieces, positions)
         mapped_positions = {}
-        pieces.map do |piece|
+        pieces.each do |piece|
           position = ""
           case piece.type
           when "Rook"
@@ -176,4 +178,4 @@ module Chess
     end
   end
 
-end
+end # end Chess module

@@ -24,9 +24,9 @@ module Chess
       }
     end
     
-    def self.possible_move?(destination, board, piece)
+    def self.process_move(destination, board, piece)
       # destination is symbol
-      # check if given destination is possible with current game board
+      # if given destination is possible with current game board return { tile: ["flags"]}
       piece_type = case piece.type
         when "Rook"
           Chess::Piece::Rook.new
@@ -41,13 +41,16 @@ module Chess
         when "Pawn"
           Chess::Piece::Pawn.new
       end
-      return true if piece_type.moves(board, piece).include?(destination.to_s)
+      piece_moves = piece_type.moves(board, piece)
+      if piece_moves.keys.include?(destination.to_s)
+        return { destination.to_s => piece_moves[destination.to_s] }
+      end
       false
     end
 
     # for queen, bishop and rook
     def generate_paths_for(offsets, board, piece)
-      path_tiles = []
+      path_tiles = {}
       offsets.each do |offset|
         i = 1
         # max length of a path in any direction is 7
@@ -57,15 +60,15 @@ module Chess
           case 
           when next_tile.nil? || wrapped?(next_tile, path_tiles)
             break
-          when Chess::Board.new.is_piece?(next_tile, board)
-            if Chess::Board.new.is_enemy?(next_tile, piece.color, board)
-              path_tiles << next_tile
+          when chess_board.is_piece?(next_tile, board)
+            if chess_board.is_enemy?(next_tile, piece.color, board)
+              path_tiles[next_tile] = ["captured"]
               break
             else
               break
             end
           end
-          path_tiles << next_tile
+          path_tiles[next_tile] = [""]
           i += 1
         end
       end
@@ -99,7 +102,7 @@ module Chess
     # helper to ensure possible moves don't include wrapped tiles
     def wrapped?(next_tile, path_tiles)
       return false if path_tiles.empty? || path_tiles.nil?
-      last_tile_letter = path_tiles.last[0]
+      last_tile_letter = path_tiles.keys.last[0]
       next_tile_letter = next_tile[0]
       if next_tile_letter == "h" && last_tile_letter == "a"
         return true
@@ -110,10 +113,14 @@ module Chess
       end
     end
 
+    def chess_board
+      board = Chess::Board.new
+    end
+
     class Pawn < Piece
 
       def moves(board, piece)
-        possible_moves = []
+        possible_moves = {}
         offsets = []
         left = offsets_to_coordinates([-1], board, piece)
         right = offsets_to_coordinates([1], board, piece)
@@ -124,35 +131,35 @@ module Chess
           two_in_front = offsets_to_coordinates([-16], board, piece)
           front_left = offsets_to_coordinates([-9], board, piece)
           front_right = offsets_to_coordinates([-7], board, piece)
-          unless Chess::Board.new.is_piece?(in_front, board)
+          unless chess_board.is_piece?(in_front, board)
             offsets << -8
-            offsets << -16 if piece.position[1] == "2" && !Chess::Board.new.is_piece?(two_in_front, board)
+            offsets << -16 if piece.position[1] == "2" && !chess_board.is_piece?(two_in_front, board)
           end
-          offsets << -9 if !front_left.nil? && Chess::Board.new.is_enemy?(front_left, "white", board)
-          offsets << -7 if !front_right.nil? && Chess::Board.new.is_enemy?(front_right, "white", board)
-          if Chess::Board.new.en_passant?(piece, board)
-            offsets << -9 if !left.nil? && Chess::Board.new.is_enemy?(left, "white", board)
-            offsets << -7 if !right.nil? && Chess::Board.new.is_enemy?(right, "white", board)
+          offsets << -9 if !front_left.nil? && chess_board.is_enemy?(front_left, "white", board)
+          offsets << -7 if !front_right.nil? && chess_board.is_enemy?(front_right, "white", board)
+          if chess_board.en_passant?(piece, board)
+            offsets << -9 if !left.nil? && chess_board.is_enemy?(left, "white", board)
+            offsets << -7 if !right.nil? && chess_board.is_enemy?(right, "white", board)
           end
         elsif piece.color == "black"
           in_front = offsets_to_coordinates([8], board, piece)
           two_in_front = offsets_to_coordinates([16], board, piece)
           front_left = offsets_to_coordinates([9], board, piece)
           front_right = offsets_to_coordinates([7], board, piece)
-          unless Chess::Board.new.is_piece?(in_front, board)
+          unless chess_board.is_piece?(in_front, board)
             offsets << 8
-            offsets << 16 if piece.position[1] == "7" && !Chess::Board.new.is_piece?(two_in_front, board)
+            offsets << 16 if piece.position[1] == "7" && !chess_board.is_piece?(two_in_front, board)
           end
-          offsets << 9 if !front_left.nil? && Chess::Board.new.is_enemy?(front_left, "black", board)
-          offsets << 7 if !front_right.nil? && Chess::Board.new.is_enemy?(front_right, "black", board)
-          if Chess::Board.new.en_passant?(piece, board)
-            offsets << 7 if !left.nil? && Chess::Board.new.is_enemy?(left, "black", board)
-            offsets << 9 if !right.nil? && Chess::Board.new.is_enemy?(right, "black", board)
+          offsets << 9 if !front_left.nil? && chess_board.is_enemy?(front_left, "black", board)
+          offsets << 7 if !front_right.nil? && chess_board.is_enemy?(front_right, "black", board)
+          if chess_board.en_passant?(piece, board)
+            offsets << 7 if !left.nil? && chess_board.is_enemy?(left, "black", board)
+            offsets << 9 if !right.nil? && chess_board.is_enemy?(right, "black", board)
           end
         end
 
         legal_moves = offsets_to_coordinates(offsets, board, piece)
-        legal_moves.each { |move| possible_moves << move unless Chess::Board.new.obstructed?(move, piece.color, board) }
+        legal_moves.each { |move| possible_moves[move] = "" unless chess_board.obstructed?(move, piece.color, board) }
         possible_moves
       end
 
@@ -162,7 +169,7 @@ module Chess
 
       def moves(board, piece)
         offsets = [-8,-1,1,8]
-        generate_paths_for(offsets, board, piece)
+        rook_moves = generate_paths_for(offsets, board, piece)
       end
 
     end
@@ -170,11 +177,11 @@ module Chess
     class Knight < Piece
 
       def moves(board, piece)
-        possible_moves = []
+        possible_moves = {}
         offsets = [-17,-15,-10,-6,6,10,15,17]
         legal_moves = offsets_to_coordinates(offsets, board, piece)
         legal_moves.each do |move| 
-          possible_moves << move unless Chess::Board.new.obstructed?(move, piece.color, board)
+          possible_moves[move] = "" unless chess_board.obstructed?(move, piece.color, board)
         end
         possible_moves
       end
@@ -185,7 +192,7 @@ module Chess
 
       def moves(board, piece)
         offsets = [-9,-7,7,9]
-        generate_paths_for(offsets, board, piece)
+        bishop_moves = generate_paths_for(offsets, board, piece)
       end
 
     end
@@ -194,7 +201,7 @@ module Chess
 
       def moves(board, piece)
         offsets = [-9,-8,-7,-1,1,7,8,9]
-        generate_paths_for(offsets, board, piece)
+        queen_moves = generate_paths_for(offsets, board, piece)
       end
 
     end
@@ -202,14 +209,15 @@ module Chess
     class King < Piece
 
       def moves(board, piece)
-        possible_moves = []
+        possible_moves = {}
         offsets = [-9,-8,-7,-1,1,7,8,9]
         legal_moves = offsets_to_coordinates(offsets, board, piece)
-        legal_moves.each { |move| possible_moves << move unless Chess::Board.new.obstructed?(move, piece.color, board) }
+        legal_moves.each { |move| possible_moves[move] = "" unless chess_board.obstructed?(move, piece.color, board) }
         possible_moves
       end
 
     end
 
   end # end Piece class
+      
 end # end Chess module

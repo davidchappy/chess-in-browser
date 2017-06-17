@@ -2,7 +2,7 @@ module GamePrep
   extend ActiveSupport::Concern
 
   def generate_pieces(game)
-    # fill both players with pieces
+    # fill game's (associated) players with (associated) pieces
     [game.white, game.black].each_with_index do |player, i|
       color = i == 0 ? "white" : "black"
       create_piece(player, game, "Rook", color, "r1")
@@ -31,15 +31,13 @@ module GamePrep
   private 
 
     def generate_pawns(player, game, color)
-      # create pawns for a player
       8.times do |i|
         create_piece(player, game, "Pawn", color, "p" + (i+1).to_s)
       end
     end
 
     def create_piece(player, game, type, color, suffix)
-      player.pieces.create( game: game, type: type, 
-                            color: color, name: color + "-" + suffix)
+      player.pieces.create( type: type, color: color, name: color + "-" + suffix)
     end
 
     def add_pieces_to_board(game)

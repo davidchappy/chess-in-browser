@@ -32,8 +32,7 @@ RSpec.describe GameUpdate do
     it "assigns moves to each player's piece" do
       [game_with_moves.white, game_with_moves.black].each do |player|
         player.pieces.each do |piece|
-          expect(piece.available_moves.length).to_not eq(0)
-          expect(piece.available_moves).to_not be_nil
+          expect(piece.moves).to_not be_nil
         end
       end
     end
@@ -63,10 +62,10 @@ RSpec.describe GameUpdate do
           piece = game_with_moves.white.pieces.where(name: piece_name).take
           if moves.length > 0
             moves.each do |move|
-              expect(parse(piece.available_moves)).to include(move)
+              expect(piece.moves.select {|p| p if p[:to] == move}.length).to be > 0
             end
           else
-            expect(parse(piece.available_moves)).to eq(moves)
+            expect(piece.moves).to be_empty
           end
         end
       end # end it white pieces
@@ -94,10 +93,10 @@ RSpec.describe GameUpdate do
           piece = game_with_moves.black.pieces.where(name: piece_name).take
           if moves.length > 0
             moves.each do |move|
-              expect(parse(piece.available_moves)).to include(move)
+              expect(piece.moves.select {|p| p if p[:to] == move}.length).to be > 0
             end
           else
-            expect(parse(piece.available_moves)).to eq(moves)
+            expect(piece.moves).to be_empty
           end
         end
       end # end it black pieces

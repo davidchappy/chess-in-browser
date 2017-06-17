@@ -26,10 +26,10 @@ module Chess
       all_moves = {}
       [game.white, game.black].each do |player|
         player.pieces.each do |piece|
-          all_moves[piece.name] = []
+          all_moves[piece.name] = {}
           game.board.each do |tile, content|
             if Chess::Piece.possible_move?(tile, game.board, piece)
-              all_moves[piece.name] << tile.to_s  
+              all_moves[piece.name][tile.to_s] = "" 
             end
           end
         end
@@ -38,21 +38,20 @@ module Chess
     end
 
     # Accept move and update board and pieces accordingly
-    def self.process_move(game, move)
+    def self.update_board(board, move)
       start, destination = move.split(",")
       
       # Select piece and empty starting position
-      piece = game.board[start.to_sym]
-      game.board[start.to_sym] = ""
+      piece = board[start.to_sym]
+      board[start.to_sym] = ""
 
-      process_castling(game, start, destination)
-      process_en_passant(game, start, destination)
-      process_capturing(game, start, destination)
-      process_move(game, start, destination)
-      process_promotion(game, start, destination)
+      process_castling(board, piece, destination)
+      process_en_passant(board, piece, destination)
+      process_capturing(board, piece, destination)
+      process_movement(board, piece, destination)
+      process_promotion(board, piece, destination)
 
-      # game, white, and black must be saved (autosaving in place)
-      game
+      board
     end
 
     # Private
@@ -104,20 +103,21 @@ module Chess
       end
 
       # Move helpers
-      def process_castling(game, start, destination)
-        
+      def process_castling(board, piece, destination)
       end
 
-      def process_en_passant(game, start, destination)
+      def process_en_passant(board, piece, destination)
       end
 
-      def process_capturing(game, start, destination)
+      def process_capturing(board, piece, destination)
       end
 
-      def process_move(game, start, destination)
+      def process_movement(board, piece, destination)
+        piece.position = destination
+        board[destination.to_sym] = piece
       end
 
-      def process_promotion(game, start, destination)
+      def process_promotion(board, piece, destination)
       end
 
 

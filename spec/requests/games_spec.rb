@@ -48,22 +48,25 @@ RSpec.describe "Game Requests", :type => :request do
 
       it "returns accurate available moves for pieces" do
         white_pawn = json['white']['pieces'].select{|p| p if p['name'] == 'white-p1'}[0]
-        expect(parse(white_pawn['available_moves'])).to include("a3")
-        expect(parse(white_pawn['available_moves'])).to include("a4")
+        white_moves = white_pawn['moves']
+        expect(white_moves.any? {|m| m if m.has_value?("a3")}).to be_truthy
+        expect(white_moves.any? {|m| m if m.has_value?("a4")}).to be_truthy
 
         black_knight = json['black']['pieces'].select{|p| p if p['name'] == 'black-n1'}[0]
-        expect(parse(black_knight['available_moves'])).to include("a6")
-        expect(parse(black_knight['available_moves'])).to include("c6")
+        black_moves = black_knight['moves']
+        expect(black_moves.any? {|m| m if m.has_value?("a6")}).to be_truthy
+        expect(black_moves.any? {|m| m if m.has_value?("c6")}).to be_truthy
 
         white_queen = json['white']['pieces'].select{|p| p if p['name'] == 'white-q'}[0]
-        expect(parse(white_queen['available_moves'])).to eq([])
+        queen_moves = white_queen['moves']
+        expect(queen_moves).to be_empty
       end
     end
 
     describe 'PUT /api/games/:id' do
       let!(:game) { create(:game) }
       let!(:game_board) { game.board }
-      let(:valid_params) { { move: "a2,a4" } }
+      let!(:valid_params) { { move: "a2,a4" } }
       let!(:id) { game.id }
 
       before do
@@ -78,8 +81,10 @@ RSpec.describe "Game Requests", :type => :request do
 
       it "moves a piece" do
         pawn = game_board[:a2]
-        expect(json['game']['board']['a2']).to eq("")
-        expect(json['game']['board']['a4']['name']).to eq(pawn.name)
+        a2 = json['game']['board']['a2']
+        expect(a2).to eq("")
+        a4 = json['game']['board']['a4']
+        expect(a4['name']).to eq(pawn['name'])
       end
 
     end

@@ -2,8 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Piece, type: :model do
   # Association test
-  # ensure M:1 relationship with both game and player
-  it { should belong_to(:game) }
+  # ensure M:1 relationship with player
   it { should belong_to(:player) }
 
   # Validation tests

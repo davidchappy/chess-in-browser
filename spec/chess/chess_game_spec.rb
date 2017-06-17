@@ -53,20 +53,20 @@ RSpec.describe Chess::Game do
       expect(moves).to be_a(Hash)
       expect(moves.length).to eq(32)
 
-      expect(moves['white-p4']).to_not be_nil
-      expect(moves['black-n2']).to_not be_nil
-      expect(moves['white-k']).to_not be_nil
+      expect(moves['white-p4']).to_not be_empty
+      expect(moves['black-n2']).to_not be_empty
+      expect(moves['white-k']).to be_empty
     end
 
     it "returns arrays of moves for each piece" do
-      expect(moves['white-p4']).to be_a(Array)
-      expect(moves['white-p4']).to include("d3")
+      expect(moves['white-p4']).to be_a(Hash)
+      expect(moves['white-p4'].keys).to include("d3")
 
-      expect(moves['black-n2']).to be_a(Array)
-      expect(moves['black-n2']).to include("h6")
+      expect(moves['black-n2']).to be_a(Hash)
+      expect(moves['black-n2'].keys).to include("h6")
 
-      expect(moves['white-k']).to be_a(Array)
-      expect(moves['white-k']).to be_empty
+      expect(moves['white-k']).to be_a(Hash)
+      expect(moves['white-k'].keys).to be_empty
     end    
   end
 

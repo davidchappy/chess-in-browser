@@ -3,7 +3,7 @@ class Game < ApplicationRecord
   include GamePrep
   include GameUpdate
 
-  after_create :start_game
+  after_create :start_tasks
   serialize :board
 
   # Associations
@@ -22,20 +22,15 @@ class Game < ApplicationRecord
   end
 
   def update(move)
-    game = Chess::Game.process_move(self.board, move)
-    game.white.save!
-    game.black.save!
-    game.save!
-
+    update_tasks(move)
     # update game.white.pieces with move
     # update game.black.pieces with move
-    # switch turn
-    [game, game.white, game.black]
+    [self, self.white, self.black]
   end
 
   private
 
-    def start_game
+    def start_tasks
       # game_prep
       generate_pieces(self)
       position_pieces(self)
@@ -44,6 +39,11 @@ class Game < ApplicationRecord
       get_moves(self)
       set_status(self, "playing")
       set_turn(self.white, self.black)
+    end
+
+    def update_tasks(move)
+      update_board(self, move)
+      # get_moves(self)
     end
 
 end

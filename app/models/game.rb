@@ -3,13 +3,12 @@ class Game < ApplicationRecord
   include GamePrep
   include GameUpdate
 
-  after_create :generate
+  after_create :start_game
   serialize :board
 
   # Associations
   belongs_to :white, polymorphic: true
   belongs_to :black, polymorphic: true
-  has_many   :pieces, dependent: :destroy
 
   # Validations
   validates_inclusion_of :status,
@@ -36,11 +35,11 @@ class Game < ApplicationRecord
 
   private
 
-    def generate
+    def start_game
       generate_pieces(self)
-      place_pieces(self)
+      position_pieces(self)
       init_board(self)
-      # get_moves(self)
+      get_moves(self)
       set_status(self, "playing")
       set_turn(self.white, self.black)
     end

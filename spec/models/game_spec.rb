@@ -6,7 +6,6 @@ RSpec.describe Game, type: :model do
   describe 'association tests' do
     it { should belong_to(:white) }
     it { should belong_to(:black) }
-    it { should have_many(:pieces).dependent(:destroy) }
   end
 
   describe 'validation tests' do

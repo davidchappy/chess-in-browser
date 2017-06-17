@@ -41,7 +41,7 @@ Endpoints:
 
 
 #### Rails Chess Lib Methods (all accessed via call to Chess::Game):
-- `.place_pieces`: consumes  
+- `.position_pieces`: consumes  
 - 
 
 ## References:

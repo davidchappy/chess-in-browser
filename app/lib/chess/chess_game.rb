@@ -3,8 +3,8 @@ module Chess
   class Game
     include PieceMethods
 
-    # Returns a player's pieces with initial positions set
-    def self.place_pieces(pieces)
+    # Returns a player's pieces with initial positions
+    def self.position_pieces(pieces)
       color = pieces.first.color
       positions = starting_positions(pieces, color)
       pieces.each do |piece|
@@ -13,11 +13,9 @@ module Chess
       pieces
     end
 
-    # Generate game.board (coord hash) & fill w pieces
+    # Generate game.board (coord hash)
     def self.init_board(game)
       game.board = generate_board
-      pieces = game.white.pieces + game.black.pieces
-      add_pieces_to_board(game.board, pieces)
       game 
     end
 
@@ -102,15 +100,6 @@ module Chess
         letters=("a".."h")
         letters.to_a.each do |letter|
           board[(letter + num.to_s).to_sym] = ""
-        end
-      end
-
-      def add_pieces_to_board(board, pieces)
-        pieces.each do |piece|
-        position = piece.position.to_sym
-        if board.keys.include?(position) 
-            board[position] = piece
-          end
         end
       end
 

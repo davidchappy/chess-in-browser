@@ -22,18 +22,22 @@ module GameUpdate
 
   def get_moves(game)
     moves = Chess::Game.get_moves(game)
-    [game.white, game.black].each { |p| map_moves_to_player(moves, p) }
+    map_moves(game, moves)
     game.save!
     game
   end
 
   private
 
-    def map_moves_to_player(moves, player)
-      player.pieces.each do |piece|
-        piece.available_moves = moves[piece.name]
-        piece.save!
+    # Add moves from hash to pieces
+    def map_moves(game, moves)
+      [game.white.pieces, game.black.pieces].each do |collection| 
+        collection.each do |piece|
+          piece.available_moves = moves[piece.name]
+          piece.save!
+          game.board[piece.position.to_sym] = piece
+        end
       end
-      player.save!
+      game.save!
     end
 end

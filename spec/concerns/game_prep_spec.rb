@@ -7,9 +7,7 @@ RSpec.describe GamePrep do
   let!(:game) { Game.create(white: guest1, black: guest2, status: "starting") }
 
   describe '#generate_pieces' do
-    it "adds all game piece objects to a game object" do
-      expect(game.pieces).to_not be_empty
-      expect(game.pieces.length).to eq(32)
+    it "adds all game piece objects to players" do
       expect(game.white.pieces).to_not be_empty
       expect(game.white.pieces.length).to eq(16)
       expect(game.black.pieces).to_not be_empty
@@ -17,25 +15,59 @@ RSpec.describe GamePrep do
     end
 
     it "assigns a color to each piece" do
-      
+      game.white.pieces.each do |piece|
+        expect(piece.color).to eq("white")
+      end
+      game.black.pieces.each do |piece|
+        expect(piece.color).to eq("black")
+      end
     end
 
     it "properly creates db records" do
-      expect(Game.last.pieces.length).to eq(32)
       expect(Game.last.white.pieces.length).to eq(16)
+      Game.last.white.pieces.each do |piece|
+        expect(piece.color).to eq("white")
+      end
+
       expect(Game.last.black.pieces.length).to eq(16)
+      Game.last.black.pieces.each do |piece|
+        expect(piece.color).to eq("black")
+      end
+    end
+
+    it "creates the right number of pieces" do
+      expect((game.white.pieces.select {|p| p if p.type == "Rook"}).length).to eq(2)
+      expect((game.white.pieces.select {|p| p if p.type == "Knight"}).length).to eq(2)
+      expect((game.white.pieces.select {|p| p if p.type == "Bishop"}).length).to eq(2)
+      expect((game.white.pieces.select {|p| p if p.type == "Queen"}).length).to eq(1)
+      expect((game.white.pieces.select {|p| p if p.type == "King"}).length).to eq(1)
+      expect((game.white.pieces.select {|p| p if p.type == "Pawn"}).length).to eq(8)
+
+      expect((game.black.pieces.select {|p| p if p.type == "Rook"}).length).to eq(2)
+      expect((game.black.pieces.select {|p| p if p.type == "Knight"}).length).to eq(2)
+      expect((game.black.pieces.select {|p| p if p.type == "Bishop"}).length).to eq(2)
+      expect((game.black.pieces.select {|p| p if p.type == "Queen"}).length).to eq(1)
+      expect((game.black.pieces.select {|p| p if p.type == "King"}).length).to eq(1)
+      expect((game.black.pieces.select {|p| p if p.type == "Pawn"}).length).to eq(8)
+    end
+
+    it "assigns unique names to each piece" do
+      expect((game.white.pieces.select {|p| p if p.name == "white-p1"}).length).to eq(1)
+      expect((game.white.pieces.select {|p| p if p.name == "white-k"}).length).to eq(1)
+      expect((game.black.pieces.select {|p| p if p.name == "black-p5"}).length).to eq(1)
+      expect((game.black.pieces.select {|p| p if p.name == "black-q"}).length).to eq(1)
     end
   end
 
-  describe '#place_pieces' do
+  describe '#position_pieces' do
     it "adds positions to each player's piece" do
       expect(game.white.pieces).to_not be_empty
       expect(game.white.pieces.first.position).to_not eq("unplaced")
     end
 
-    it "should add positions to pieces and save them" do
-      white = game.white
-      black = game.black
+    it "correctly saves the players' pieces in the db" do
+      white = Game.last.white
+      black = Game.last.black
       
       expect(white.pieces).to_not be_empty
       white.pieces.each do |piece|
@@ -54,6 +86,12 @@ RSpec.describe GamePrep do
       expect(game.board).to_not be_nil
       expect(game.board).to_not be_empty
       expect(game.board.length).to eq(64)
+    end
+
+    it "correctly saves the game board" do
+      expect(Game.last.board).to_not be_nil
+      expect(Game.last.board).to_not be_empty
+      expect(Game.last.board.length).to eq(64)
     end
   end
   

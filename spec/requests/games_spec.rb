@@ -45,6 +45,19 @@ RSpec.describe "Game Requests", :type => :request do
         expect(json['white']['pieces'].first).not_to eq("unplaced")
         expect(json['black']['pieces'].first).not_to eq("unplaced")
       end
+
+      it "returns accurate available moves for pieces" do
+        white_pawn = json['white']['pieces'].select{|p| p if p['name'] == 'white-p1'}[0]
+        expect(parse(white_pawn['available_moves'])).to include("a3")
+        expect(parse(white_pawn['available_moves'])).to include("a4")
+
+        black_knight = json['black']['pieces'].select{|p| p if p['name'] == 'black-n1'}[0]
+        expect(parse(black_knight['available_moves'])).to include("a6")
+        expect(parse(black_knight['available_moves'])).to include("c6")
+
+        white_queen = json['white']['pieces'].select{|p| p if p['name'] == 'white-q'}[0]
+        expect(parse(white_queen['available_moves'])).to eq([])
+      end
     end
 
     describe 'GET /api/games/:id' do

@@ -18,13 +18,14 @@ module GamePrep
     game.save!
   end
 
-  def place_pieces(game)
-    Chess::Game.place_pieces(game.white.pieces).each(&:save!)
-    Chess::Game.place_pieces(game.black.pieces).each(&:save!)
+  def position_pieces(game)
+    Chess::Game.position_pieces(game.white.pieces).each(&:save!)
+    Chess::Game.position_pieces(game.black.pieces).each(&:save!)
   end
 
   def init_board(game)
     Chess::Game.init_board(game).save!
+    add_pieces_to_board(game)
   end
 
   private 
@@ -39,6 +40,18 @@ module GamePrep
     def create_piece(player, game, type, color, suffix)
       player.pieces.create( game: game, type: type, 
                             color: color, name: color + "-" + suffix)
+    end
+
+    def add_pieces_to_board(game)
+      board = game.board
+      pieces = game.white.pieces + game.black.pieces
+      pieces.each do |piece|
+        position = piece.position.to_sym
+        if board.keys.include?(position) 
+          board[position] = piece
+        end
+      end
+      game.save!
     end
 
 end

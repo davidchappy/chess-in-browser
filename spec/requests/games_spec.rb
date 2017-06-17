@@ -60,6 +60,30 @@ RSpec.describe "Game Requests", :type => :request do
       end
     end
 
+    describe 'PUT /api/games/:id' do
+      let!(:game) { create(:game) }
+      let!(:game_board) { game.board }
+      let(:valid_params) { { move: "a2,a4" } }
+      let!(:id) { game.id }
+
+      before do
+        put "/api/games/#{id}", params: valid_params
+      end
+
+      it "returns an updated board" do
+        expect(json).to_not be_empty
+        expect(json['game']).to_not be_empty
+        expect(json['game']['board']).to_not eq(game_board)
+      end
+
+      it "moves a piece" do
+        pawn = game_board[:a2]
+        expect(json['game']['board']['a2']).to eq("")
+        expect(json['game']['board']['a4']['name']).to eq(pawn.name)
+      end
+
+    end
+
     describe 'GET /api/games/:id' do
       # let(:game) { create(:game) }
 
@@ -75,30 +99,6 @@ RSpec.describe "Game Requests", :type => :request do
       # end
 
     end
-
-    describe 'PUT /api/games/:id' do
-      # let!(:game) { create(:game) }
-      # let!(:game_board) { game.board }
-      # let(:valid_params) { { move: "a2,a4" } }
-
-      # before do 
-      #   id = game.id
-      #   put "/api/games/#{id}", params: valid_params
-      # end
-
-      # it "returns an updated board" do
-      #   expect(json).to_not be_empty
-      #   expect(json['game']).to_not be_empty
-      #   expect(json['game']['board']).to_not eq(JSON.parse(game_board))
-      # end
-
-      # it "moves a piece" do
-      #   expect(json['game']['board']['a2']).to eq("")
-      #   expect(json['game']['board']['a4']).to be_a(Pawn)
-      # end
-
-    end
-
 
   end
   # When game is requested as a valid user

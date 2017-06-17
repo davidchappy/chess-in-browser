@@ -83,6 +83,7 @@ RSpec.describe GamePrep do
 
   describe '#init_board' do
     it 'fills game.board' do
+      expect(game.board).to be_a(Hash)
       expect(game.board).to_not be_nil
       expect(game.board).to_not be_empty
       expect(game.board.length).to eq(64)

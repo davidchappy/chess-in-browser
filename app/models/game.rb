@@ -36,9 +36,11 @@ class Game < ApplicationRecord
   private
 
     def start_game
+      # game_prep
       generate_pieces(self)
       position_pieces(self)
       init_board(self)
+      # game_update
       get_moves(self)
       set_status(self, "playing")
       set_turn(self.white, self.black)

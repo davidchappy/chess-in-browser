@@ -185,7 +185,7 @@ module Chess
       def moves(board, piece)
         possible_moves = {}
         offsets = [-17,-15,-10,-6,6,10,15,17]
-        moves = knight_coords(offsets, board, piece)
+        moves = offsets_to_coordinates(offsets, board, piece)
         moves.each do |move| 
           if move.nil? || piece.position.nil?
             next
@@ -198,19 +198,6 @@ module Chess
           end
         end
         possible_moves
-      end
-
-      def knight_coords(offsets, board, piece)
-        coordinates = []
-        current_position_index = coord_to_index(board, piece)
-
-        offsets.each do |offset|
-          adjusted_index = current_position_index + offset
-          tile = board.keys[adjusted_index].to_s if adjusted_index.between?(0,63)
-          coordinates << tile
-        end
-
-        coordinates
       end
 
       def knight_wrapped?(next_tile, last_tile)

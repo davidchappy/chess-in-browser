@@ -98,8 +98,8 @@ module Chess
       end
 
       def fill_row(num, board)
-        letters=("a".."h")
-        letters.to_a.each do |letter|
+        letters=("a".."h").to_a.reverse
+        letters.each do |letter|
           board[(letter + num.to_s).to_sym] = ""
         end
       end

@@ -62,7 +62,7 @@ RSpec.describe GameUpdate do
           piece = game_with_moves.white.pieces.where(name: piece_name).take
           if moves.length > 0
             moves.each do |move|
-              expect(piece.moves.select {|p| p if p[:to] == move}.length).to be > 0
+              expect(piece.moves.select {|p| p if p["to"] == move}.length).to be > 0
             end
           else
             expect(piece.moves).to be_empty

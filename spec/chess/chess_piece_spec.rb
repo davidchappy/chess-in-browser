@@ -61,6 +61,36 @@ RSpec.describe Chess::Piece do
         expect(knight_class.moves(valid_game.board, pawn)).to include("c3")
       end
     end
+
+    describe '#knight_wrapped?' do
+      let(:next_tile) { "h3" }
+      let(:last_tile) { "b1" }
+
+      it "prevents Knight horizontally wrapping around board" do
+        expect(knight_class.knight_wrapped?(next_tile, last_tile)).to eq(true)
+
+        next_tile = "b5"
+        last_tile = "h4"
+        expect(knight_class.knight_wrapped?(next_tile, last_tile)).to eq(true)
+      end
+
+      it "prevents Knight vertically wrapping around board" do
+        next_tile = "a2"
+        last_tile = "b5"
+        expect(knight_class.knight_wrapped?(next_tile, last_tile)).to eq(true)
+
+        next_tile = "f7"
+        last_tile = "g1"
+        expect(knight_class.knight_wrapped?(next_tile, last_tile)).to eq(true)
+      end
+
+      it "allows legal Knight moves" do
+        next_tile = "h6"
+        last_tile = "g8"
+
+        expect(knight_class.knight_wrapped?(next_tile, last_tile)).to eq(false)
+      end
+    end
   end
 
   describe Chess::Piece::Rook do

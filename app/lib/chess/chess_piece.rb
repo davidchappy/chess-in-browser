@@ -52,31 +52,34 @@ module Chess
 
     # for queen, bishop and rook
     def generate_paths_for(offsets, board, piece)
-      path_tiles = {}
+      moves = {}
       offsets.each do |offset|
         i = 1
+        last_tile = piece.position
         # max length of a path in any direction is 7
         7.times do |n|
-          next_tile ||= nil
-          last_tile = next_tile
+          next_tile ||= ""
           adjusted_offset = offset * i     
-          next_tile = offsets_to_coordinates([adjusted_offset], board, piece)
+          coords = offsets_to_coordinates([adjusted_offset], board, piece)
+          next_tile = coords unless coords.nil?
           case 
-          when next_tile.nil? || wrapped?(next_tile, last_tile)
+          when wrapped?(next_tile, last_tile)
             break
           when chess_board.is_piece?(next_tile, board)
             if chess_board.is_enemy?(next_tile, piece.color, board)
-              path_tiles.merge!( { next_tile => ["capturing"] } )
+              moves.merge!( { next_tile => ["capturing"] } )
               break
             else
               break
             end
+          else
+            moves.merge!( { next_tile => [""] } )
           end
-          path_tiles.merge!( { next_tile => [""] } )
           i += 1
+          last_tile = next_tile
         end
       end
-      path_tiles
+      moves
     end
 
     # returns list of tiles matching key offsets or string if singular
@@ -105,6 +108,8 @@ module Chess
 
     # helper to ensure possible moves don't include wrapped tiles
     def wrapped?(next_tile, last_tile)
+      puts next_tile
+      puts last_tile
       return false if next_tile.nil? || last_tile.nil?
       if next_tile[0] == "h" && last_tile[0] == "a"
         return true
@@ -165,7 +170,11 @@ module Chess
         end
 
         legal_moves = offsets_to_coordinates(offsets, board, piece)
-        legal_moves.each { |move| possible_moves[move] = "" unless chess_board.obstructed?(move, piece.color, board) }
+        if legal_moves.class == Array
+          legal_moves.each { |move| possible_moves[move] = "" unless chess_board.obstructed?(move, piece.color, board) }
+        else
+          possible_moves[legal_moves] = "" unless chess_board.obstructed?(legal_moves, piece.color, board)
+        end
         possible_moves
       end
 

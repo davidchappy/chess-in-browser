@@ -6,7 +6,7 @@ module Chess
     # Returns a player's pieces with initial positions
     def self.position_pieces(pieces)
       color = pieces.first.color
-      positions = starting_positions(pieces, color)
+      positions = starting_positions(pieces, color) 
       pieces.each do |piece|
         piece.position = positions[piece.id] if positions.keys.include?(piece.id)
       end
@@ -64,6 +64,18 @@ module Chess
       process_movement(new_board, piece, to)
 
       new_board
+    end
+
+    # Assign board's piece positions to player's pieces and return pieces
+    def self.update_pieces(player, board)
+      player.pieces.each do |piece|
+        board_piece = board.select{|t, val| val if val != "" && val.name == piece.name}.values[0]
+        if(piece.position != board_piece.position)
+          piece.has_moved = true
+          piece.position = board_piece.position
+        end
+      end
+      player.pieces
     end
 
     # Private
@@ -130,7 +142,6 @@ module Chess
 
       def process_movement(board, piece, to)
         piece.position = to
-        piece.has_moved = true
         board[to.to_sym] = piece
       end
 

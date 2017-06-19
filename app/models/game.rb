@@ -43,7 +43,8 @@ class Game < ApplicationRecord
 
     def update_tasks(move)
       update_board(self, move)
-      # get_moves(self)
+      update_pieces(self)
+      get_moves(self)
     end
 
 end

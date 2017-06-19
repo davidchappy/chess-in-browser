@@ -33,6 +33,11 @@ module GameUpdate
     game.save!
   end
 
+  def update_pieces(game)
+    Chess::Game.update_pieces(game.white, game.board).each(&:save!)
+    Chess::Game.update_pieces(game.black, game.board).each(&:save!)
+  end
+
   private
 
     # Add moves from hash to pieces as Move instances
@@ -40,6 +45,7 @@ module GameUpdate
       [game.white.pieces, game.black.pieces].each do |collection| 
         collection.each do |piece|
           piece_moves = moves[piece.name]
+          piece.moves.destroy_all
           piece_moves.each do |destination, flags|
             piece.moves.create!(to: destination, flags: flags)
           end

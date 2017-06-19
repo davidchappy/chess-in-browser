@@ -27,6 +27,7 @@ module Chess
     def self.process_move(destination, board, piece)
       # destination is symbol
       # if given destination is possible with current game board return { tile: ["flags"]}
+      returned_moves = {}
       piece_type = case piece.type
         when "Rook"
           Chess::Piece::Rook.new
@@ -43,9 +44,10 @@ module Chess
       end
       piece_moves = piece_type.moves(board, piece)
       if piece_moves.keys.include?(destination.to_s)
-        return { destination.to_s => piece_moves[destination.to_s] }
+        returned_moves.merge!({ destination.to_s => piece_moves[destination.to_s] })
       end
-      false
+      # process_captures(returned_moves)
+      return returned_moves
     end
 
     # for queen, bishop and rook
@@ -54,21 +56,23 @@ module Chess
       offsets.each do |offset|
         i = 1
         # max length of a path in any direction is 7
-        7.times do |n|   
+        7.times do |n|
+          next_tile ||= nil
+          last_tile = next_tile
           adjusted_offset = offset * i     
           next_tile = offsets_to_coordinates([adjusted_offset], board, piece)
           case 
-          when next_tile.nil? || wrapped?(next_tile, path_tiles)
+          when next_tile.nil? || wrapped?(next_tile, last_tile)
             break
           when chess_board.is_piece?(next_tile, board)
             if chess_board.is_enemy?(next_tile, piece.color, board)
-              path_tiles[next_tile] = ["captured"]
+              path_tiles.merge!( { next_tile => ["capturing"] } )
               break
             else
               break
             end
           end
-          path_tiles[next_tile] = [""]
+          path_tiles.merge!( { next_tile => [""] } )
           i += 1
         end
       end
@@ -100,13 +104,15 @@ module Chess
     end
 
     # helper to ensure possible moves don't include wrapped tiles
-    def wrapped?(next_tile, path_tiles)
-      return false if path_tiles.empty? || path_tiles.nil?
-      last_tile_letter = path_tiles.keys.last[0]
-      next_tile_letter = next_tile[0]
-      if next_tile_letter == "h" && last_tile_letter == "a"
+    def wrapped?(next_tile, last_tile)
+      return false if next_tile.nil? || last_tile.nil?
+      if next_tile[0] == "h" && last_tile[0] == "a"
         return true
-      elsif next_tile_letter == "a" && last_tile_letter == "h"
+      elsif next_tile[0] == "a" && last_tile[0] == "h"
+        return true
+      elsif next_tile[1] == "1" && last_tile[1] == "8"
+        return true
+      elsif next_tile[1] == "8" && last_tile[1] == "1"
         return true
       else 
         return false

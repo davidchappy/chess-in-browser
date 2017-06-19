@@ -16,6 +16,30 @@ RSpec.describe Chess::Piece do
     end
   end
 
+  describe '#wrapped?' do
+    let(:next_tile) { "a3" }
+    let(:last_tile) { "h3" }
+
+    it "prevents wrapping horizontally around board" do
+      expect(described_class.new.wrapped?(next_tile, last_tile)).to eq(true)
+    end
+
+    it "prevents wrapping vertically around board" do
+      next_tile = "c1"
+      last_tile = "c8"
+      expect(described_class.new.wrapped?(next_tile, last_tile)).to eq(true)
+    end
+
+    it "allows normal movement" do
+      next_tile = "b4"
+      last_tile = "a3"
+      expect(described_class.new.wrapped?(next_tile, last_tile)).to eq(false)
+
+      next_tile = "a4"
+      expect(described_class.new.wrapped?(next_tile, last_tile)).to eq(false)
+    end
+  end
+
   describe Chess::Piece::Pawn do
     let(:pawn_class) { described_class.new }
 

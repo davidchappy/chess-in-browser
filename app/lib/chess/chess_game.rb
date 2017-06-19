@@ -21,7 +21,7 @@ module Chess
 
     # Return hash of all moves given current state of game board 
     def self.get_moves(game)
-      # keys: piece names; 
+      # keys: piece names
       # values: array of available moves
       all_moves = {}
       [game.white, game.black].each do |player|

@@ -49,13 +49,13 @@ RSpec.describe "Game Requests", :type => :request do
       it "returns accurate available moves for pieces" do
         white_pawn = json['white']['pieces'].select{|p| p if p['name'] == 'white-p1'}[0]
         white_moves = white_pawn['moves']
-        expect(white_moves.any? {|m| m if m.has_value?("a3")}).to be_truthy
-        expect(white_moves.any? {|m| m if m.has_value?("a4")}).to be_truthy
+        expect(white_moves.any? {|m| m if m["to"] == "a3"}).to be_truthy
+        expect(white_moves.any? {|m| m if m["to"] == "a4"}).to be_truthy
 
         black_knight = json['black']['pieces'].select{|p| p if p['name'] == 'black-n1'}[0]
         black_moves = black_knight['moves']
-        expect(black_moves.any? {|m| m if m.has_value?("a6")}).to be_truthy
-        expect(black_moves.any? {|m| m if m.has_value?("c6")}).to be_truthy
+        expect(black_moves.any? {|m| m if m["to"] == "a6"}).to be_truthy
+        expect(black_moves.any? {|m| m if m["to"] == "c6"}).to be_truthy
 
         white_queen = json['white']['pieces'].select{|p| p if p['name'] == 'white-q'}[0]
         queen_moves = white_queen['moves']

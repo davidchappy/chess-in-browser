@@ -1,6 +1,13 @@
 module GameUpdate
   extend ActiveSupport::Concern
 
+  def get_moves(game)
+    moves = Chess::Game.get_moves(game)
+    map_moves(game, moves)
+    game.save!
+    game
+  end
+
   def set_status(game, status="playing")
     game.status = status
     game.save!
@@ -20,13 +27,6 @@ module GameUpdate
     black.save!
   end
 
-  def get_moves(game)
-    moves = Chess::Game.get_moves(game)
-    map_moves(game, moves)
-    game.save!
-    game
-  end
-
   def update_board(game, move)
     board = Chess::Game.update_board(game.board, move)
     game.board = board
@@ -35,7 +35,7 @@ module GameUpdate
 
   private
 
-    # Add moves from hash to pieces
+    # Add moves from hash to pieces as Move instances
     def map_moves(game, moves)
       [game.white.pieces, game.black.pieces].each do |collection| 
         collection.each do |piece|

@@ -40,19 +40,30 @@ module Chess
 
     # Accept move and update board and pieces accordingly
     def self.update_board(board, move)
-      start, destination = move.split(",")
-      
-      # Select piece and empty starting position
-      piece = board[start.to_sym]
-      board[start.to_sym] = ""
+      new_board = board.clone
+      # move is a hash ( from => from_tile, to => to_tile, flags => flags )
+      from  = move["from"]
+      to    = move["to"]
+      flags = move["flags"]      
+      piece = new_board[from.to_sym]
 
-      process_castling(board, piece, destination)
-      process_en_passant(board, piece, destination)
-      process_capturing(board, piece, destination)
-      process_movement(board, piece, destination)
-      process_promotion(board, piece, destination)
+      # empty start square
+      new_board[from.to_sym] = ""
 
-      board
+      case 
+      when flags.nil? || flags.empty? || flags == ""
+      when flags.include("castling")
+        process_castling(new_board, piece, to)
+      when flags.include("en_passant")
+        process_en_passant(new_board, piece, to)
+      when flags.include("capturing")
+        process_capturing(new_board, piece, to)
+      when flags.include("promoting")
+        process_promotion(new_board, piece, to)
+      end
+      process_movement(new_board, piece, to)
+
+      new_board
     end
 
     # Private
@@ -105,23 +116,23 @@ module Chess
       end
 
       # Move helpers
-      def process_castling(board, piece, destination)
+      def process_castling(board, piece, to)
       end
 
-      def process_en_passant(board, piece, destination)
+      def process_en_passant(board, piece, to)
       end
 
-      def process_capturing(board, piece, destination)
+      def process_capturing(board, piece, to)
       end
 
-      def process_movement(board, piece, destination)
-        piece.position = destination
-        board[destination.to_sym] = piece
+      def process_promotion(board, piece, to)
       end
 
-      def process_promotion(board, piece, destination)
+      def process_movement(board, piece, to)
+        piece.position = to
+        piece.has_moved = true
+        board[to.to_sym] = piece
       end
-
 
       # Helper helpers
       

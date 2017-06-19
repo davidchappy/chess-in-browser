@@ -30,6 +30,9 @@ RSpec.describe Chess::Piece do
       expect(described_class.new.wrapped?(next_tile, last_tile)).to eq(true)
     end
 
+    it "prevents knights from wrapping" do
+    end
+
     it "allows normal movement" do
       next_tile = "b4"
       last_tile = "a3"

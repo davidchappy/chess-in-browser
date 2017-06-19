@@ -185,11 +185,50 @@ module Chess
       def moves(board, piece)
         possible_moves = {}
         offsets = [-17,-15,-10,-6,6,10,15,17]
-        legal_moves = offsets_to_coordinates(offsets, board, piece)
-        legal_moves.each do |move| 
-          possible_moves[move] = "" unless chess_board.obstructed?(move, piece.color, board)
+        moves = knight_coords(offsets, board, piece)
+        moves.each do |move| 
+          if move.nil? || piece.position.nil?
+            next
+          elsif knight_wrapped?(move, piece.position)
+            next
+          elsif chess_board.obstructed?(move, piece.color, board)
+            next
+          else
+            possible_moves[move] = ""
+          end
         end
         possible_moves
+      end
+
+      def knight_coords(offsets, board, piece)
+        coordinates = []
+        current_position_index = coord_to_index(board, piece)
+
+        offsets.each do |offset|
+          adjusted_index = current_position_index + offset
+          tile = board.keys[adjusted_index].to_s if adjusted_index.between?(0,63)
+          coordinates << tile
+        end
+
+        coordinates
+      end
+
+      def knight_wrapped?(next_tile, last_tile)
+        letters = ("a".."h").to_a
+        numbers = ("1".."8").to_a
+
+        file_offset = letters.index(next_tile[0]) - letters.index(last_tile[0])
+        rank_offset = numbers.index(next_tile[1]) - numbers.index(last_tile[1])
+
+        if(next_tile[0] == last_tile[0] || 
+            next_tile[1] == last_tile[1] || 
+            file_offset > 2 || 
+            file_offset < -2 || 
+            rank_offset > 2 || rank_offset < -2)
+          return true
+        else
+          return false
+        end                 
       end
 
     end

@@ -34,7 +34,7 @@ class Game < ApplicationRecord
 
     def start_tasks
       # game_prep
-      generate_pieces(self)
+      game = generate_pieces(self).save!
       position_pieces(self)
       init_board(self)
       # game_update

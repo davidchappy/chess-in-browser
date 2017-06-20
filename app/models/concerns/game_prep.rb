@@ -15,7 +15,7 @@ module GamePrep
       create_piece(player, game, "Queen", color, "q")
       generate_pawns(player, game, color)
     end
-    game.save!
+    game
   end
 
   def position_pieces(game)

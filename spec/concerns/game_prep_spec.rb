@@ -7,11 +7,18 @@ RSpec.describe GamePrep do
   let!(:game) { Game.create(white: guest1, black: guest2, status: "starting") }
 
   describe '#generate_pieces' do
+    include GamePrep
+
     it "adds all game piece objects to players" do
-      expect(game.white.pieces).to_not be_empty
-      expect(game.white.pieces.length).to eq(16)
-      expect(game.black.pieces).to_not be_empty
-      expect(game.black.pieces.length).to eq(16)
+      guest1.pieces.destroy_all
+      guest2.pieces.destroy_all
+      game = Game.new(white: guest1, black: guest2, status: "starting")
+      p generate_pieces(game).white.pieces
+      # expect(game.white.pieces).to_not be_empty
+      # expect(game.white.pieces.length).to eq(16)
+      # p game.white.pieces
+      # expect(game.black.pieces).to_not be_empty
+      # expect(game.black.pieces.length).to eq(16)
     end
 
     it "assigns a color to each piece" do

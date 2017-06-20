@@ -38,8 +38,6 @@ module Chess
           return Chess::Piece::King.new
         when "Pawn"
           return Chess::Piece::Pawn.new
-        else 
-          return Chess::Piece::Pawn.new
       end
     end
     
@@ -53,9 +51,10 @@ module Chess
       if piece_moves.keys.include?(destination.to_s)
         move = { destination.to_s => piece_moves[destination.to_s] }
         if Chess::Piece.new.check?(piece, move, board)
-          move[destination.to_s] += " check" 
+          move[destination.to_s] << "check" 
         end
       end
+
       # process_captures(move)
       return move
     end
@@ -83,7 +82,7 @@ module Chess
               break
             end
           else
-            moves.merge!( { next_tile => [""] } )
+            moves.merge!( { next_tile => [""] } ) unless next_tile == ""
           end
           i += 1
           last_tile = next_tile
@@ -138,22 +137,44 @@ module Chess
 
     def check?(piece, move, board)
       destination = move.keys.first.to_s
-      attackers = []    
-      other_player_pieces = []
-      king = board.select{|t, val| val if val && val != "" && val.name == "king" && val.color != piece.color}.values[0]
+      pretend_piece = piece
+      pretend_piece.position = destination
+      pretend_board = board
+      pretend_board[destination.to_sym] = pretend_piece
+      king = board.select{|t, val| val if val && val != "" && val.type == "King" && val.color != piece.color}.values[0]
 
-      board.each do |tile, content|
-        if content && king && content.color != king.color
-          other_player_pieces << content
-        end
+      piece_type = get_type(pretend_piece)
+      moves = piece_type.moves(pretend_board, pretend_piece)
+      if pretend_piece.type = "Queen"
+        # p piece
+        # p pretend_board[destination.to_sym]
+        # puts "moves"
+        # p moves
       end
-      other_player_pieces.each do |piece|
-        piece_type = get_type(piece)
-        piece_type.moves(board, piece).each do |tile, flags|
-          attackers << piece if tile == king.position
-        end
+      if moves.keys.include?(king.position)
+        return true
+      else 
+        return false
       end
-      return attackers.length > 0 ? true : false
+
+      # attackers = []    
+      # other_player_pieces = []
+
+      # board.each do |tile, content|
+      #   if king && content != "" && content.color != king.color
+      #     other_player_pieces << content
+      #   end
+      # end
+
+      # other_player_pieces.each do |piece|
+      #   piece_type = get_type(piece)
+      #   p piece_type.moves(board, piece)
+      #   piece_type.moves(board, piece).each do |tile, flags|
+      #     attackers << piece if tile == king.position
+      #   end
+      # end
+
+      # return attackers.length > 0 ? true : false
     end
 
     class Pawn < Piece
@@ -281,7 +302,11 @@ module Chess
         possible_moves = {}
         offsets = [-9,-8,-7,-1,1,7,8,9]
         legal_moves = offsets_to_coordinates(offsets, board, piece)
-        legal_moves.each { |move| possible_moves[move] = "" unless chess_board.obstructed?(move, piece.color, board) }
+        legal_moves.each do |move| 
+          unless chess_board.obstructed?(move, piece.color, board) || move.nil?
+            possible_moves[move] = "" 
+          end
+        end
         possible_moves
       end
 

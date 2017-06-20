@@ -26,9 +26,9 @@ module Chess
       all_moves = {}
       player.pieces.each do |piece|
         all_moves[piece.name] = {}
-        game.board.each do |tile, content|
+        game.board.keys.each do |tile|
           move = Chess::Piece.process_move(tile, game.board, piece)
-          if move
+          if move != {}
             all_moves[piece.name].merge!(move)  
           end
         end

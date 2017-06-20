@@ -44,8 +44,8 @@ module Chess
       # move is a hash ( from => from_tile, to => to_tile, flags => flags )
       from  = move["from"]
       to    = move["to"]
-      flags = move["flags"]      
-      piece = new_board[from.to_sym]
+      flags = move["flags"]     
+      piece = new_board[from.to_sym] unless new_board[from.to_sym] == ""
 
       # empty start square
       new_board[from.to_sym] = ""

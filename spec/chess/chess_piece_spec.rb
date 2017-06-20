@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'chess/chess'
 
 RSpec.describe Chess::Piece do
-  let!(:valid_game) { create(:game) }
+  let(:valid_game) { create(:game) }
   let(:pawn)   { valid_game.white.pieces.where(name: "white-p1").take }
   let(:rook)   { valid_game.white.pieces.where(name: "white-r1").take }
   let(:knight) { valid_game.white.pieces.where(name: "white-n1").take }
@@ -98,7 +98,7 @@ RSpec.describe Chess::Piece do
 
     describe '#moves' do
       it 'returns rook moves given a board state and rook model' do
-        expect(rook_class.moves(valid_game.board, rook)).to be_empty
+        expect(rook_class.moves(valid_game.board, rook).keys.first).to eq("")
       end
     end
   end

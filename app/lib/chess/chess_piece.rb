@@ -23,31 +23,41 @@ module Chess
         }
       }
     end
+
+    def get_type(piece)
+      case piece.type
+        when "Rook"
+          return Chess::Piece::Rook.new
+        when "Knight"
+          return Chess::Piece::Knight.new
+        when "Bishop"
+          return Chess::Piece::Bishop.new
+        when "Queen"
+          return Chess::Piece::Queen.new
+        when "King"
+          return Chess::Piece::King.new
+        when "Pawn"
+          return Chess::Piece::Pawn.new
+        else 
+          return Chess::Piece::Pawn.new
+      end
+    end
     
+    # return move or empty hash for a possible scenario
     def self.process_move(destination, board, piece)
       # destination is symbol
-      # if given destination is possible with current game board return { tile: ["flags"]}
-      returned_moves = {}
-      piece_type = case piece.type
-        when "Rook"
-          Chess::Piece::Rook.new
-        when "Knight"
-          Chess::Piece::Knight.new
-        when "Bishop"
-          Chess::Piece::Bishop.new
-        when "Queen"
-          Chess::Piece::Queen.new
-        when "King"
-          Chess::Piece::King.new
-        when "Pawn"
-          Chess::Piece::Pawn.new
-      end
+      # move looks like { tile: ["flags"]}
+      move = {}
+      piece_type = Chess::Piece.new.get_type(piece)
       piece_moves = piece_type.moves(board, piece)
       if piece_moves.keys.include?(destination.to_s)
-        returned_moves.merge!({ destination.to_s => piece_moves[destination.to_s] })
+        move = { destination.to_s => piece_moves[destination.to_s] }
+        if Chess::Piece.new.check?(piece, move, board)
+          move[destination.to_s] += " check" 
+        end
       end
-      # process_captures(returned_moves)
-      return returned_moves
+      # process_captures(move)
+      return move
     end
 
     # for queen, bishop and rook
@@ -108,8 +118,6 @@ module Chess
 
     # helper to ensure possible moves don't include wrapped tiles
     def wrapped?(next_tile, last_tile)
-      puts next_tile
-      puts last_tile
       return false if next_tile.nil? || last_tile.nil?
       if next_tile[0] == "h" && last_tile[0] == "a"
         return true
@@ -126,6 +134,26 @@ module Chess
 
     def chess_board
       board = Chess::Board.new
+    end
+
+    def check?(piece, move, board)
+      destination = move.keys.first.to_s
+      attackers = []    
+      other_player_pieces = []
+      king = board.select{|t, val| val if val && val != "" && val.name == "king" && val.color != piece.color}.values[0]
+
+      board.each do |tile, content|
+        if content && king && content.color != king.color
+          other_player_pieces << content
+        end
+      end
+      other_player_pieces.each do |piece|
+        piece_type = get_type(piece)
+        piece_type.moves(board, piece).each do |tile, flags|
+          attackers << piece if tile == king.position
+        end
+      end
+      return attackers.length > 0 ? true : false
     end
 
     class Pawn < Piece

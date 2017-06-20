@@ -47,23 +47,20 @@ RSpec.describe Chess::Game do
   end
 
   describe '.get_moves' do
-    let(:moves) { Chess::Game.get_moves(valid_game) }
+    let(:moves) { Chess::Game.get_moves(valid_game, valid_game.current_player) }
     
     it "returns a hash with piece names as keys" do
       expect(moves).to be_a(Hash)
-      expect(moves.length).to eq(32)
+      expect(moves.length).to eq(16)
 
       expect(moves['white-p4']).to_not be_empty
-      expect(moves['black-n2']).to_not be_empty
+      expect(moves['black-n2']).to be_nil      
       expect(moves['white-k']).to be_empty
     end
 
     it "returns arrays of moves for each piece" do
       expect(moves['white-p4']).to be_a(Hash)
       expect(moves['white-p4'].keys).to include("d3")
-
-      expect(moves['black-n2']).to be_a(Hash)
-      expect(moves['black-n2'].keys).to include("h6")
 
       expect(moves['white-k']).to be_a(Hash)
       expect(moves['white-k'].keys).to be_empty

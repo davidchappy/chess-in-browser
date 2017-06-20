@@ -19,41 +19,42 @@ module Chess
       game 
     end
 
-    # Return hash of all moves given current state of game board 
-    def self.get_moves(game)
+    # Return hash of all moves for a player given current state of game board 
+    def self.get_moves(game, player)
       # keys: piece names
-      # values: array of available moves
+      # values: hash of available moves
       all_moves = {}
-      [game.white, game.black].each do |player|
-        player.pieces.each do |piece|
-          all_moves[piece.name] = {}
-          game.board.each do |tile, content|
-            move = Chess::Piece.process_move(tile, game.board, piece)
-            if move
-              all_moves[piece.name].merge!(move)  
-            end
+      player.pieces.each do |piece|
+        all_moves[piece.name] = {}
+        game.board.each do |tile, content|
+          move = Chess::Piece.process_move(tile, game.board, piece)
+          if move
+            all_moves[piece.name].merge!(move)  
           end
         end
       end
+      get_castle_moves(game, all_moves)
+
       all_moves      
     end
 
     # Accept move and update board and pieces accordingly
-    def self.update_board(board, move)
-      new_board = board.clone
+    def self.update_board(game, move)
+      new_board = game.board.clone
       # move is a hash ( from => from_tile, to => to_tile, flags => flags )
       from  = move["from"]
       to    = move["to"]
-      flags = move["flags"]     
+      flags = move["flags"].split(" ") if move["flags"]     
       piece = new_board[from.to_sym] unless new_board[from.to_sym] == ""
 
       # empty start square
       new_board[from.to_sym] = ""
 
+      # evaluate scenarios
       case 
       when flags.nil? || flags.empty? || flags == ""
       when flags.include("castling")
-        process_castling(new_board, piece, to)
+        castle(new_board, piece, to)
       when flags.include("en_passant")
         process_en_passant(new_board, piece, to)
       when flags.include("capturing")
@@ -61,9 +62,11 @@ module Chess
       when flags.include("promoting")
         process_promotion(new_board, piece, to)
       end
+      # always move piece 
       process_movement(new_board, piece, to)
 
-      new_board
+      game.board = new_board
+      game
     end
 
     # Assign board's piece positions to player's pieces and return pieces
@@ -81,7 +84,15 @@ module Chess
     # Private
     
     class << self
-    
+      def get_castle_moves(game, all_moves)
+        castle_moves = Chess::Board.new.castle_moves(game)
+        if castle_moves != {}
+          king_name = castle_moves.first[0]
+          all_moves[king_name].merge!(castle_moves.first[1])
+        end
+        all_moves
+      end
+
       # Startup helpers
       def starting_positions(pieces, color)
         positions = Piece.positions[color.to_sym]
@@ -128,7 +139,36 @@ module Chess
       end
 
       # Move helpers
-      def process_castling(board, piece, to)
+      def castle(board, piece, to)
+        king = piece
+        case king.color
+        when 'white'
+          board[:e1] = ""
+          if to == 'g1'
+            rook = board[:h1]
+            board[:h1] = ""
+            board[:f1] = rook
+            board[:g1] = king
+          elsif to == 'c1'
+            rook = board[:a1]
+            board[:a1] = ""
+            board[:d1] = rook
+            board[:c1] = king
+          end
+        when 'black'
+          board[:e8] = ""
+          if to == 'g8'
+            rook = board[:h8]
+            board[:h8] = ""
+            board[:f8] = rook
+            board[:g8] = king
+          elsif to == 'c8'
+            rook = board[:a8]
+            board[:a8] = ""
+            board[:d8] = rook
+            board[:c8] = king
+          end
+        end
       end
 
       def process_en_passant(board, piece, to)

@@ -2,7 +2,8 @@ module GameUpdate
   extend ActiveSupport::Concern
 
   def get_moves(game)
-    moves = Chess::Game.get_moves(game)
+    purge_moves(game)
+    moves = Chess::Game.get_moves(game, game.current_player)
     map_moves(game, moves)
     game.save!
     game
@@ -28,9 +29,7 @@ module GameUpdate
   end
 
   def update_board(game, move)
-    board = Chess::Game.update_board(game.board, move)
-    game.board = board
-    game.save!
+    Chess::Game.update_board(game, move).save!
   end
 
   def update_pieces(game)
@@ -40,18 +39,23 @@ module GameUpdate
 
   private
 
+    def purge_moves(game)
+      [game.white.pieces, game.black.pieces].each do |collection|
+        collection.each do |piece|
+          piece.moves.destroy_all
+        end
+      end
+    end
+
     # Add moves from hash to pieces as Move instances
     def map_moves(game, moves)
-      [game.white.pieces, game.black.pieces].each do |collection| 
-        collection.each do |piece|
-          piece_moves = moves[piece.name]
-          piece.moves.destroy_all
-          piece_moves.each do |destination, flags|
-            piece.moves.create!(to: destination, flags: flags)
-          end
-          piece.save!
-          game.board[piece.position.to_sym] = piece
+      game.current_player.pieces.each do |piece|
+        piece_moves = moves[piece.name]
+        piece_moves.each do |destination, flags|
+          piece.moves.create!(to: destination, flags: flags)
         end
+        piece.save!
+        game.board[piece.position.to_sym] = piece
       end
       game.save!
     end

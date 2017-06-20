@@ -23,9 +23,11 @@ class Game < ApplicationRecord
 
   def update(move)
     update_tasks(move)
-    # update game.white.pieces with move
-    # update game.black.pieces with move
     [self, self.white, self.black]
+  end
+
+  def current_player
+    self.white.is_playing ? self.white : self.black
   end
 
   private
@@ -36,14 +38,15 @@ class Game < ApplicationRecord
       position_pieces(self)
       init_board(self)
       # game_update
+      set_turn(self.white, self.black)
       get_moves(self)
       set_status(self, "playing")
-      set_turn(self.white, self.black)
     end
 
     def update_tasks(move)
       update_board(self, move)
       update_pieces(self)
+      set_turn(self.white, self.black)
       get_moves(self)
     end
 

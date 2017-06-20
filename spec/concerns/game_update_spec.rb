@@ -29,16 +29,17 @@ RSpec.describe GameUpdate do
   describe '#get_moves' do
     let(:game_with_moves) { get_moves(game) }
 
-    it "assigns moves to each player's piece" do
-      [game_with_moves.white, game_with_moves.black].each do |player|
-        player.pieces.each do |piece|
-          expect(piece.moves).to_not be_nil
-        end
+    it "assigns moves to the current player's piece" do
+      game_with_moves.black.pieces.each do |piece|
+        expect(piece.moves).to be_empty
       end
+      pieces_with_moves = game_with_moves.current_player.pieces.select do |piece|
+        piece if piece.moves.length > 0
+      end
+      expect(pieces_with_moves).to_not be_empty
     end
 
     context 'when starting up' do
-
       it "assigns correct moves to white pieces" do
         white_starting_moves = {
           "white-p1": ["a3", "a4"],
@@ -89,6 +90,9 @@ RSpec.describe GameUpdate do
           "black-k":  [],
           "black-q":  [],
         }
+        game_with_moves.set_turn(game_with_moves.white, game_with_moves.black)
+        get_moves(game_with_moves)
+        
         black_starting_moves.each do |piece_name, moves|
           piece = game_with_moves.black.pieces.where(name: piece_name).take
           if moves.length > 0

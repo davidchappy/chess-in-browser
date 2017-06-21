@@ -61,6 +61,43 @@ RSpec.describe "Game Requests", :type => :request do
         expect(json['game']['board']['h2']['name']).to eq('white-p8')
       end
 
+      it "returns a game board with blank tiles" do
+        post "/api/games", params: guest_params
+
+        expect(json['game']['board']['a6']).to eq('')
+        expect(json['game']['board']['a5']).to eq('')
+        expect(json['game']['board']['a4']).to eq('')
+        expect(json['game']['board']['a3']).to eq('')
+        expect(json['game']['board']['b6']).to eq('')
+        expect(json['game']['board']['b5']).to eq('')
+        expect(json['game']['board']['b4']).to eq('')
+        expect(json['game']['board']['b3']).to eq('')
+        expect(json['game']['board']['c6']).to eq('')
+        expect(json['game']['board']['c5']).to eq('')
+        expect(json['game']['board']['c4']).to eq('')
+        expect(json['game']['board']['c3']).to eq('')
+        expect(json['game']['board']['d6']).to eq('')
+        expect(json['game']['board']['d5']).to eq('')
+        expect(json['game']['board']['d4']).to eq('')
+        expect(json['game']['board']['d3']).to eq('')
+        expect(json['game']['board']['e6']).to eq('')
+        expect(json['game']['board']['e5']).to eq('')
+        expect(json['game']['board']['e4']).to eq('')
+        expect(json['game']['board']['e3']).to eq('')
+        expect(json['game']['board']['f6']).to eq('')
+        expect(json['game']['board']['f5']).to eq('')
+        expect(json['game']['board']['f4']).to eq('')
+        expect(json['game']['board']['f3']).to eq('')
+        expect(json['game']['board']['g6']).to eq('')
+        expect(json['game']['board']['g5']).to eq('')
+        expect(json['game']['board']['g4']).to eq('')
+        expect(json['game']['board']['g3']).to eq('')
+        expect(json['game']['board']['h6']).to eq('')
+        expect(json['game']['board']['h5']).to eq('')
+        expect(json['game']['board']['h4']).to eq('')
+        expect(json['game']['board']['h3']).to eq('')
+      end
+
       it "returns two guest players" do
         post "/api/games", params: guest_params
 
@@ -80,13 +117,13 @@ RSpec.describe "Game Requests", :type => :request do
       it "returns 16 pieces for each player" do
         post "/api/games", params: guest_params
 
-        expect(json['white']['pieces'].length).to eq(16)
-        expect(json['black']['pieces'].length).to eq(16)
-        json['white']['pieces'].each do |piece|
+        expect(json['game']['white_pieces'].length).to eq(16)
+        expect(json['game']['black_pieces'].length).to eq(16)
+        json['game']['white_pieces'].each do |piece|
           expect(piece['position']).not_to be_nil
           expect(piece['position']).not_to eq("unplaced")
         end        
-        json['black']['pieces'].each do |piece|
+        json['game']['black_pieces'].each do |piece|
           expect(piece['position']).not_to be_nil
           expect(piece['position']).not_to eq("unplaced")
         end
@@ -95,17 +132,17 @@ RSpec.describe "Game Requests", :type => :request do
       it "returns accurate available moves for pieces" do
         post "/api/games", params: guest_params
         
-        white_pawn = json['white']['pieces'].select{|p| p if p['name'] == 'white-p1'}[0]
+        white_pawn = json['game']['white_pieces'].select{|p| p if p['name'] == 'white-p1'}[0]
         white_moves = white_pawn['moves']
         expect(white_moves.any? {|m| m if m["to"] == "a3"}).to be_truthy
         expect(white_moves.any? {|m| m if m["to"] == "a4"}).to be_truthy
 
-        white_knight = json['white']['pieces'].select{|p| p if p['name'] == 'white-n1'}[0]
+        white_knight = json['game']['white_pieces'].select{|p| p if p['name'] == 'white-n1'}[0]
         white_moves = white_knight['moves']
         expect(white_moves.any? {|m| m if m["to"] == "a3"}).to be_truthy
         expect(white_moves.any? {|m| m if m["to"] == "c3"}).to be_truthy
 
-        white_queen = json['white']['pieces'].select{|p| p if p['name'] == 'white-q'}[0]
+        white_queen = json['game']['white_pieces'].select{|p| p if p['name'] == 'white-q'}[0]
         queen_moves = white_queen['moves']
         expect(queen_moves).to be_empty
       end
@@ -147,8 +184,8 @@ RSpec.describe "Game Requests", :type => :request do
       end
 
       it "returns moves only for the new current player's pieces" do
-        white_pieces = json['white']['pieces']
-        black_pieces = json['black']['pieces']
+        white_pieces = json['game']['white_pieces']
+        black_pieces = json['game']['black_pieces']
         white_pieces.each do |piece|
           expect(piece['moves']).to be_empty
         end

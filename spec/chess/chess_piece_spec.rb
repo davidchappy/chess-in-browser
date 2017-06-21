@@ -3,28 +3,26 @@ require 'chess/chess'
 
 RSpec.describe Chess::Piece do
   let!(:valid_game) { create(:game) }
-  let!(:pawn)   { valid_game.white.pieces.where(name: "white-p1").take }
-  let!(:rook)   { valid_game.white.pieces.where(name: "white-r1").take }
-  let!(:knight) { valid_game.white.pieces.where(name: "white-n1").take }
-  let!(:bishop) { valid_game.white.pieces.where(name: "white-b1").take }
-  let!(:king)   { valid_game.white.pieces.where(name: "white-k").take }
-  let!(:queen)  { valid_game.white.pieces.where(name: "white-q").take }
+  let!(:pawn)   { valid_game.white_pieces.where(name: "white-p1").take }
+  let!(:rook)   { valid_game.white_pieces.where(name: "white-r1").take }
+  let!(:knight) { valid_game.white_pieces.where(name: "white-n1").take }
+  let!(:bishop) { valid_game.white_pieces.where(name: "white-b1").take }
+  let!(:king)   { valid_game.white_pieces.where(name: "white-k").take }
+  let!(:queen)  { valid_game.white_pieces.where(name: "white-q").take }
 
-  describe '.process_move' do
-    it 'returns hash of move with flags/empty string as values' do
-      puts "board at start"
-      p valid_game.board[:c3]
-      p valid_game.board[:b3]
-      p valid_game.board[:a3]
-      expect(described_class.process_move("a3", valid_game.board, pawn)).to eq("a3"=>"")
+  describe '.get_piece_moves' do
+    it 'returns hash of all moves for a piece' do
+      expect(described_class.get_piece_moves(valid_game.board, pawn)).to eq({"a3"=>"", "a4" => ""})
     end
 
-    it 'returns check flag if move would place board in check' do
-      board_in_check = valid_game.board
-      board_in_check[:c2] = ""
-      board_in_check[:d7] = ""
-      expect(described_class.process_move("a4", board_in_check, queen)).to eq("a4"=>["check"])
-    end
+    # it 'returns check flag if move would place board in check' do
+    #   board_in_check = valid_game.board
+    #   board_in_check[:c2].position = "unplaced"
+    #   board_in_check[:c2] = ""
+    #   board_in_check[:d7].position = "unplaced"
+    #   board_in_check[:d7] = ""
+    #   expect(described_class.get_piece_moves("a4", board_in_check, queen)["a4"]).to include("check")
+    # end
   end
 
   describe '#wrapped?' do
@@ -54,7 +52,9 @@ RSpec.describe Chess::Piece do
   describe '#check' do
     it "returns true if a move would cause check or false if not" do
       board_in_check = valid_game.board
+      board_in_check[:e2].position = "unplaced"
       board_in_check[:e2] = ""
+      board_in_check[:f7].position = "unplaced"
       board_in_check[:f7] = ""
       piece = queen
       move = { "h5" => "" }
@@ -67,7 +67,8 @@ RSpec.describe Chess::Piece do
 
     describe '#moves' do
       it 'returns pawn moves given a board state and pawn model' do
-        expect(pawn_class.moves(valid_game.board, pawn)).to include("a3")
+        valid_game.board[:a3] = ""
+        expect(pawn_class.moves(valid_game.board, pawn).keys).to include("a3")
       end
     end
   end
@@ -77,7 +78,7 @@ RSpec.describe Chess::Piece do
 
     describe '#moves' do
       it 'returns knight moves given a board state and knight model' do
-        expect(knight_class.moves(valid_game.board, pawn)).to include("c3")
+        expect(knight_class.moves(valid_game.board, knight).keys).to include("c3")
       end
     end
 
@@ -117,17 +118,12 @@ RSpec.describe Chess::Piece do
 
     describe '#moves' do
       it 'returns rook moves given a board state and rook model' do
-        p valid_game.board
         expect(rook_class.moves(valid_game.board, rook)).to eq({})
-
-        board = valid_game.board
-        pawn = board[:a2]
+        pawn = valid_game.board[:a2]
         pawn.position = "unplaced"
-        board[:a2] = ""
-        p board[:a3]
-        p board[:a4]
-        p rook_class.moves(board, rook)
-        # expect(rook_class.moves(board, rook)).to include("a7")
+        valid_game.board[:a2] = ""
+        valid_game.board[:a3] = ""
+        expect(rook_class.moves(valid_game.board, rook).keys).to include("a7")
       end
     end
   end

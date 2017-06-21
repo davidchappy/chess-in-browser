@@ -1,34 +1,34 @@
 module PieceMethods
   extend ActiveSupport::Concern
 
-  def rooks(parent)
-    get_pieces(parent, "Rook")
+  def rooks(collection)
+    get_pieces(collection, "Rook")
   end
 
-  def knights(parent)
-    get_pieces(parent, "Knight")
+  def knights(collection)
+    get_pieces(collection, "Knight")
   end
 
-  def bishops(parent)
-    get_pieces(parent, "Bishop")
+  def bishops(collection)
+    get_pieces(collection, "Bishop")
   end
 
-  def kings(parent)
-    get_pieces(parent, "King")
+  def kings(collection)
+    get_pieces(collection, "King")
   end
 
-  def queens(parent)
-    get_pieces(parent, "Queen")
+  def queens(collection)
+    get_pieces(collection, "Queen")
   end
 
-  def pawns(parent)
-    get_pieces(parent, "Pawn")
+  def pawns(collection)
+    get_pieces(collection, "Pawn")
   end
 
   private 
 
-    def get_pieces(parent, type)
-      parent.pieces.where(type: type)
+    def get_pieces(collection, type)
+      collection.where(type: type)
     end
 
 end

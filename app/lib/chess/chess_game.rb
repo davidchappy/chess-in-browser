@@ -6,9 +6,10 @@ module Chess
     # Returns a player's pieces with initial positions
     def self.position_pieces(pieces)
       color = pieces.first.color
-      positions = starting_positions(pieces, color) 
+      positions = starting_positions(pieces, color)
+
       pieces.each do |piece|
-        piece.position = positions[piece.id] if positions.keys.include?(piece.id)
+        piece.position = positions[piece.id]
       end
       pieces
     end
@@ -22,18 +23,16 @@ module Chess
     # Return hash of all moves for a player given current state of game board 
     def self.get_moves(game, player)
       # keys: piece names
-      # values: hash of available moves
+      # values: nested hash of available moves
+      player_color = game.white == player ? "white" : "black"
       all_moves = {}
-      player.pieces.each do |piece|
-        all_moves[piece.name] = {}
-        game.board.keys.each do |tile|
-          move = Chess::Piece.process_move(tile, game.board, piece)
-          if move != {}
-            all_moves[piece.name].merge!(move)  
-          end
-        end
+      game.pieces.each do |piece|
+        next if piece.color != player_color
+        piece_moves = Chess::Piece.get_piece_moves(game.board, piece)
+        all_moves[piece.name] = piece_moves unless piece_moves == {}
       end
-      get_castle_moves(game, all_moves)
+      # byebug
+      # get_castle_moves(game, all_moves)
 
       all_moves      
     end
@@ -42,6 +41,7 @@ module Chess
     def self.update_board(game, move)
       new_board = game.board.clone
       # move is a hash ( from => from_tile, to => to_tile, flags => flags )
+      # byebug
       from  = move["from"]
       to    = move["to"]
       flags = move["flags"].split(" ") if move["flags"]     
@@ -70,15 +70,15 @@ module Chess
     end
 
     # Assign board's piece positions to player's pieces and return pieces
-    def self.update_pieces(player, board)
-      player.pieces.each do |piece|
+    def self.update_pieces(player_pieces, board)
+      player_pieces.each do |piece|
         board_piece = board.select{|t, val| val if val != "" && val.name == piece.name}.values[0]
         if(piece.position != board_piece.position)
           piece.has_moved = true
           piece.position = board_piece.position
         end
       end
-      player.pieces
+      player_pieces
     end
 
     # Private
@@ -132,7 +132,7 @@ module Chess
       end
 
       def fill_row(num, board)
-        letters=("a".."h").to_a.reverse
+        letters=("a".."h").to_a
         letters.each do |letter|
           board[(letter + num.to_s).to_sym] = ""
         end

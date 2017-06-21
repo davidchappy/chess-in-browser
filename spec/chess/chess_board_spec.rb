@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'chess/chess'
 
-RSpec.describe Chess::Piece do
+RSpec.describe Chess::Board do
   let!(:valid_game) { create(:game) }
   let!(:board) { valid_game.board }
   let!(:board_logic) { Chess::Board.new }
@@ -27,7 +27,7 @@ RSpec.describe Chess::Piece do
       game = valid_game
       game.board[:g1] = game.board[:f1] = ""
       player = game.current_player
-      king_name = player.pieces.select{|p| p if p.type == "King"}.first.name
+      king_name = game.current_pieces.select{|p| p if p.type == "King"}.first.name
       castle_moves = board_logic.castle_moves(game)
       expect(castle_moves[king_name]).to eq({ "g1" => "castling" })
     end
@@ -38,11 +38,9 @@ RSpec.describe Chess::Piece do
       player = game.current_player
       game.board[:g8] = game.board[:f8] = ""
 
-      king_name = player.pieces.select{|p| p if p.type == "King"}.first.name
+      king_name = game.current_pieces.select{|p| p if p.type == "King"}.first.name
       castle_moves = board_logic.castle_moves(game)
-      p castle_moves.first
       expect(castle_moves[king_name]).to eq({ "g8" => "castling" })
-
     end
   end
 end

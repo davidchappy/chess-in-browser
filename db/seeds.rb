@@ -22,4 +22,4 @@
 
 guest = Guest.create(name: "Bob")
 guest2 = Guest.create(name: "Jim")
-g2 = Game.start(guest, guest2)
+g = Game.start(guest, guest2)

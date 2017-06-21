@@ -33,29 +33,29 @@ module GameUpdate
   end
 
   def update_pieces(game)
-    Chess::Game.update_pieces(game.white, game.board).each(&:save!)
-    Chess::Game.update_pieces(game.black, game.board).each(&:save!)
+    Chess::Game.update_pieces(game.white_pieces, game.board).each(&:save!)
+    Chess::Game.update_pieces(game.black_pieces, game.board).each(&:save!)
   end
 
   private
 
     def purge_moves(game)
-      [game.white.pieces, game.black.pieces].each do |collection|
-        collection.each do |piece|
-          piece.moves.destroy_all
-        end
+      game.pieces.each do |piece|
+        piece.moves.destroy_all
       end
     end
 
     # Add moves from hash to pieces as Move instances
     def map_moves(game, moves)
-      game.current_player.pieces.each do |piece|
-        piece_moves = moves[piece.name]
-        piece_moves.each do |destination, flags|
-          piece.moves.create!(to: destination, flags: flags)
+      game.current_pieces.each do |piece|
+        if moves.has_key?(piece.name)
+          piece_moves = moves[piece.name]
+          piece_moves.each do |destination, flags|
+            piece.moves.create!(from: piece.position, to: destination, flags: flags) unless destination.nil?
+          end
+          piece.save!
         end
-        piece.save!
-        game.board[piece.position.to_sym] = piece
+        # game.board[piece.position.to_sym] = piece
       end
       game.save!
     end

@@ -49,7 +49,8 @@ module Chess
       castleable = {}
       board = game.board
       player = game.current_player
-      pieces = player.pieces
+      color = game.current_player == game.white ? "white" : "black"
+      pieces = color == "white" ? game.white_pieces : game.black_pieces
       king = pieces.select{ |p| p if p.type == "King" }[0]
       castleable[king.name] = {}
 

@@ -3,8 +3,8 @@ include PieceMethods
 
 RSpec.describe PieceMethods do
   let(:game) { create(:game) }
-  let(:white) { game.white }
-  let(:black) { game.black }
+  let(:white) { game.white_pieces }
+  let(:black) { game.black_pieces }
 
   describe '#rooks' do
 

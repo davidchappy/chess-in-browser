@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170618200311) do
+ActiveRecord::Schema.define(version: 20170620183538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "games", force: :cascade do |t|
     t.time "time_elapsed"
-    t.string "status"
     t.integer "white_id"
     t.integer "black_id"
     t.datetime "created_at", null: false
@@ -25,6 +24,7 @@ ActiveRecord::Schema.define(version: 20170618200311) do
     t.string "black_type"
     t.string "white_type"
     t.text "board"
+    t.string "status", default: "starting"
   end
 
   create_table "guests", force: :cascade do |t|
@@ -40,20 +40,19 @@ ActiveRecord::Schema.define(version: 20170618200311) do
     t.bigint "piece_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "from"
     t.index ["piece_id"], name: "index_moves_on_piece_id"
   end
 
   create_table "pieces", force: :cascade do |t|
     t.string "position", default: "unplaced"
     t.string "type"
-    t.bigint "player_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "player_type"
     t.string "name"
     t.string "color"
     t.boolean "has_moved", default: false
-    t.index ["player_id"], name: "index_pieces_on_player_id"
+    t.bigint "game_id"
   end
 
   create_table "users", force: :cascade do |t|

@@ -9,14 +9,14 @@ RSpec.describe Chess::Game do
 
   describe '.position_pieces' do
     it 'assigns positions to each Piece in given pieces array' do
-      white_pieces = Chess::Game.position_pieces(white.pieces)
+      white_pieces = Chess::Game.position_pieces(valid_game.white_pieces)
       expect(white_pieces.length).to eq(16)
       white_pieces.each do |piece|
         expect(piece.position).to_not eq("unplaced")
         expect(piece_classes).to include(piece.class.to_s)
       end
 
-      black_pieces = Chess::Game.position_pieces(black.pieces)
+      black_pieces = Chess::Game.position_pieces(valid_game.black_pieces)
       expect(black_pieces.length).to eq(16)
       black_pieces.each do |piece|
         expect(piece.position).to_not eq("unplaced")
@@ -27,8 +27,8 @@ RSpec.describe Chess::Game do
 
   describe '.init_board' do
     before do
-      Chess::Game.position_pieces(valid_game.white.pieces).each(&:save!)
-      Chess::Game.position_pieces(valid_game.black.pieces).each(&:save!)
+      Chess::Game.position_pieces(valid_game.white_pieces).each(&:save!)
+      Chess::Game.position_pieces(valid_game.black_pieces).each(&:save!)
     end
 
     it 'generates a hash chess board on game' do
@@ -51,19 +51,18 @@ RSpec.describe Chess::Game do
     
     it "returns a hash with piece names as keys" do
       expect(moves).to be_a(Hash)
-      expect(moves.length).to eq(16)
+      expect(moves.length).to eq(10)
 
       expect(moves['white-p4']).to_not be_empty
       expect(moves['black-n2']).to be_nil      
-      expect(moves['white-k']).to be_empty
+      expect(moves['white-k']).to be_nil
     end
 
     it "returns arrays of moves for each piece" do
       expect(moves['white-p4']).to be_a(Hash)
       expect(moves['white-p4'].keys).to include("d3")
 
-      expect(moves['white-k']).to be_a(Hash)
-      expect(moves['white-k'].keys).to be_empty
+      expect(moves['white-k']).to be_nil
     end    
   end
 

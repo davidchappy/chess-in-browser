@@ -30,10 +30,10 @@ RSpec.describe GameUpdate do
     let(:game_with_moves) { get_moves(game) }
 
     it "assigns moves to the current player's piece" do
-      game_with_moves.black.pieces.each do |piece|
+      game_with_moves.black_pieces.each do |piece|
         expect(piece.moves).to be_empty
       end
-      pieces_with_moves = game_with_moves.current_player.pieces.select do |piece|
+      pieces_with_moves = game_with_moves.current_pieces.select do |piece|
         piece if piece.moves.length > 0
       end
       expect(pieces_with_moves).to_not be_empty
@@ -60,7 +60,7 @@ RSpec.describe GameUpdate do
           "white-q":  [],
         }
         white_starting_moves.each do |piece_name, moves|
-          piece = game_with_moves.white.pieces.where(name: piece_name).take
+          piece = game_with_moves.white_pieces.where(name: piece_name).take
           if moves.length > 0
             moves.each do |move|
               expect(piece.moves.select {|p| p if p["to"] == move}.length).to be > 0
@@ -94,7 +94,7 @@ RSpec.describe GameUpdate do
         get_moves(game_with_moves)
         
         black_starting_moves.each do |piece_name, moves|
-          piece = game_with_moves.black.pieces.where(name: piece_name).take
+          piece = game_with_moves.black_pieces.where(name: piece_name).take
           if moves.length > 0
             moves.each do |move|
               expect(piece.moves.select {|p| p if p[:to] == move}.length).to be > 0

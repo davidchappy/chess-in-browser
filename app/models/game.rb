@@ -9,6 +9,8 @@ class Game < ApplicationRecord
   # Associations
   belongs_to :white, polymorphic: true
   belongs_to :black, polymorphic: true
+  has_many   :pieces, dependent: :destroy, autosave: true
+
 
   # Validations
   validates_inclusion_of :status,
@@ -28,6 +30,18 @@ class Game < ApplicationRecord
 
   def current_player
     self.white.is_playing ? self.white : self.black
+  end
+
+  def current_pieces
+    self.current_player == self.white ? self.white_pieces : self.black_pieces
+  end
+
+  def white_pieces
+    self.pieces.where(color: "white")
+  end
+
+  def black_pieces
+    self.pieces.where(color: "black")
   end
 
   private

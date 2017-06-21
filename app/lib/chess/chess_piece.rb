@@ -9,16 +9,16 @@ module Chess
           rooks: ["a1", "h1"],
           knights: ["b1", "g1"],
           bishops: ["c1", "f1"],
-          king: ["e1"],
           queen: ["d1"],
+          king: ["e1"],
           pawns: ["a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"],
         },
         black: {
           rooks: ["a8", "h8"],
           knights: ["b8", "g8"],
           bishops: ["c8", "f8"],
-          king: ["e8"],
           queen: ["d8"],
+          king: ["e8"],
           pawns: ["a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7"],
         }
       }
@@ -42,21 +42,17 @@ module Chess
     end
     
     # return move or empty hash for a possible scenario
-    def self.process_move(destination, board, piece)
-      # destination is symbol
-      # move looks like { tile: ["flags"]}
-      move = {}
+    def self.get_piece_moves(board, piece)
       piece_type = Chess::Piece.new.get_type(piece)
       piece_moves = piece_type.moves(board, piece)
-      if piece_moves.keys.include?(destination.to_s)
-        move = { destination.to_s => piece_moves[destination.to_s] }
-        if Chess::Piece.new.check?(piece, move, board)
-          move[destination.to_s] << "check" 
-        end
-      end
+      # piece_moves.each do |destination, flags|
+      #   if Chess::Piece.new.check?(piece, destination, board)
+      #     flags << "check" 
+      #   end
+      # end 
 
-      # process_captures(move)
-      return move
+      # process_captures(piece_moves)
+      return piece_moves
     end
 
     # for queen, bishop and rook
@@ -145,12 +141,7 @@ module Chess
 
       piece_type = get_type(pretend_piece)
       moves = piece_type.moves(pretend_board, pretend_piece)
-      if pretend_piece.type = "Queen"
-        # p piece
-        # p pretend_board[destination.to_sym]
-        # puts "moves"
-        # p moves
-      end
+
       if moves.keys.include?(king.position)
         return true
       else 
@@ -224,6 +215,7 @@ module Chess
         else
           possible_moves[legal_moves] = "" unless chess_board.obstructed?(legal_moves, piece.color, board)
         end
+        # byebug  
         possible_moves
       end
 
@@ -292,6 +284,7 @@ module Chess
       def moves(board, piece)
         offsets = [-9,-8,-7,-1,1,7,8,9]
         queen_moves = generate_paths_for(offsets, board, piece)
+        # byebug
       end
 
     end

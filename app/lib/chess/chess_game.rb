@@ -41,29 +41,30 @@ module Chess
     def self.update_board(game, move)
       new_board = game.board.clone
       # move is a hash ( from => from_tile, to => to_tile, flags => flags )
-      # byebug
       from  = move["from"]
       to    = move["to"]
       flags = move["flags"].split(" ") if move["flags"]     
       piece = new_board[from.to_sym] unless new_board[from.to_sym] == ""
 
-      # empty start square
+      # empty out the start square
       new_board[from.to_sym] = ""
 
       # evaluate scenarios
       case 
       when flags.nil? || flags.empty? || flags == ""
+      when flags.include("check")
+        game.status = "check"
       when flags.include("castling")
         castle(new_board, piece, to)
       when flags.include("en_passant")
-        process_en_passant(new_board, piece, to)
-      when flags.include("capturing")
-        process_capturing(new_board, piece, to)
-      when flags.include("promoting")
-        process_promotion(new_board, piece, to)
+        en_passant(new_board, piece, to)
+      when flags.include("capture")
+        capture(new_board, piece, to)
+      when flags.include("promotion")
+        game.status = "promoting"
       end
       # always move piece 
-      process_movement(new_board, piece, to)
+      move(new_board, piece, to)
 
       game.board = new_board
       game
@@ -171,68 +172,22 @@ module Chess
         end
       end
 
-      def process_en_passant(board, piece, to)
+      def en_passant(board, piece, to)
+        
       end
 
-      def process_capturing(board, piece, to)
+      def capture(board, piece, to)
+        captured_piece = board[to.to_sym]
+        captured_piece = game.pieces.select{|p| p if p.id == captured_piece.id }.first
+        captured_piece.position = "captured"
       end
 
-      def process_promotion(board, piece, to)
-      end
-
-      def process_movement(board, piece, to)
-        piece.position = to
+      def move(board, piece, to)
         board[to.to_sym] = piece
       end
 
       # Helper helpers
-      
-      # Return false or array of left/right castelable opportunities
-      def castleable?(game)
-        castleable = []
-        king = current_player(game).pieces.where(type: "King").take
-        rooks = current_player(game).pieces.where(type: "Rook").to_a
-        left_rook = rooks.select{ |r| r if r.position == "a8" || r.position == "a1" }[0]
-        right_rook = rooks.select{ |r| r if r.position == "h8" || r.position == "h1" }[0]
-        rooks.each { |rook| rooks.delete(rook) if rook.has_moved }
 
-        if current_player(game) == game.white
-          left_side = game.board.keys.select{ |t| game.board[t] if t == :d1 || t == :c1 || t == :b1 }
-          right_side = game.board.keys.select{ |t| game.board[t] if t == :f1 || t == :g1 }     
-        else 
-          left_side = game.board.keys.select{ |t| game.board[t] if t == :d8 || t == :c8 || t == :b8 }
-          right_side = game.board.keys.select{ |t| game.board[t] if t == :f8 || t == :g8 }  
-        end
-
-        case
-        when king.has_moved || rooks.length == 0
-          return false
-        when left_side.any?{ |t| game.board[t] != "" } && right_side.any?{ |t| game.board[t] != "" }
-          return false
-        when rooks.length == 1
-          if left_side.all?{ |t| game.board[t] != "" } && left_rook.has_moved == false
-            castleable[0] = true
-            castleable[1] = false 
-          end
-          if right_side.all?{ |t| game.board[t] != "" } && right_rook.has_moved == false
-            castleable[0] ||= false 
-            castleable[1] = true 
-          end
-        when rooks.length == 2
-          castleable[0] = left_side.all?{ |t| game.board[t] != "" } ? true : false
-          castleable[1] = right_side.all?{ |t| game.board[t] != "" } ? true : false
-        else
-          return false
-        end
-
-        if castleable == [] || castleable.nil?
-          return false
-        else
-          return castleable
-        end
-      end # End castleable?
-
-      # General helpers
       def current_player(game)
         return [game.white, game.black].select { |p| p if p.is_playing }[0]
       end

@@ -93,7 +93,7 @@ module Chess
       else
         return castleable
       end
-    end
+    end # end castle_moves
 
   end
 

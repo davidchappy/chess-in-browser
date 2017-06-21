@@ -11,7 +11,7 @@ RSpec.describe Game, type: :model do
   describe 'validation tests' do
     # Validation tests
     # ensure status is one of valid options
-    it { should validate_inclusion_of(:status).in_array(["starting", "saved", "playing", "check", "check_mate"]) }
+    it { should validate_inclusion_of(:status).in_array(["starting", "saved", "playing", "check", "check_mate", "promoting"]) }
     # ensure player types are valid
     it { should validate_inclusion_of(:black_type).in_array(["Guest", "User"]) }
     it { should validate_inclusion_of(:white_type).in_array(["Guest", "User"]) }

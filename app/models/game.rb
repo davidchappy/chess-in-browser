@@ -14,7 +14,7 @@ class Game < ApplicationRecord
 
   # Validations
   validates_inclusion_of :status,
-    in: ["starting", "saved", "playing", "check", "check_mate"]
+    in: ["starting", "saved", "playing", "check", "check_mate", "promoting"]
   validates_inclusion_of :black_type, in: ["Guest", "User"]
   validates_inclusion_of :white_type, in: ["Guest", "User"]
 

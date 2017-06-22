@@ -1,8 +1,37 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+  
+    this.state = {
+      white: undefined,
+      black: undefined,
+      game: undefined
+    };
+  }
+
+  componentDidMount() {
+      axios.post('/api/games', {
+        guest1: "Fred",
+        guest2: "Ethel"
+      })
+      .then((response) => {
+        console.log(response.data)
+        this.setState({
+          white: response.data.white,
+          black: response.data.black,
+          game: response.data.game
+        })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
   render() {
     return (
       <div className="App">

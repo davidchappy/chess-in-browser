@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createGuestGame } from '../actions/chessActions';
-import logo from './logo.svg';
 import './App.css';
-import { push } from 'react-router-redux';
+// import { push } from 'react-router-redux';
 import { bindActionCreators } from 'redux';
+// import { Route, Switch } from 'react-router-dom';
+import Game from './Game';
+import Welcome from './Welcome';
 
-class App extends Component {
+export class App extends Component {
   constructor(props) {
     super(props);
   
@@ -14,39 +16,44 @@ class App extends Component {
   }
 
   render() {
-    let loadingClass = this.props.fetching ? " loading" : " loaded"
-    // let loadingClass = " loading";
+    let page;
+
+    if(this.props.fetched) {
+      page = () => {
+        return (
+          <Game />
+        )
+      }
+    } else {
+      page = () => {
+        return (
+          <Welcome fetching={this.props.fetching} 
+                   createGuestGame={this.props.createGuestGame}/>
+        )
+      }
+    }
 
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className={"App-logo" + loadingClass} alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-          <button onClick={() => this.props.createGuestGame("Alex", "Lucas")}>Start Game As Guest</button>
-        </p>
-        <button onClick={() => this.props.goToGame()}>Go to Game page via redux</button>
-        <button onClick={() => this.props.goToWelcome()}>Go to Welcome page via redux</button>
+        {page()}
       </div>
     );
   }
 }
 
+//         <Switch>
+//   <Route exact path='/' component={Welcome} />
+//   <Route exact path='/game' component={Game} />
+// </Switch>
+
 const mapStateToProps = (state, ownProps) => {
   return {
     fetching: state.chess.fetching,
     fetched: state.chess.fetched,
-    game: state.chess.game,
-    white: state.chess.white,
-    black: state.chess.black 
   }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  goToGame: () => push('/game'),
-  goToWelcome: () => push('/welcome'),
   createGuestGame
 }, dispatch);
 
@@ -54,13 +61,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(App)
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     createGuestGame: (guest1, guest2) => {
-//       dispatch(createGuestGame(guest1, guest2))
-//     }
-//   }
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(App);

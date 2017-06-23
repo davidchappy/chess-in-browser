@@ -1,23 +1,28 @@
+// Store
 import { applyMiddleware, createStore, compose } from 'redux';
+import reducer from './reducers';
+
+// Routing
 import { routerMiddleware } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
+
+// Middleware
 import thunk from "redux-thunk";  
 import { createLogger } from "redux-logger";
 import promise from "redux-promise-middleware";
-import reducer from './reducers';
 
+
+// Gather store elements
 export const history = createHistory();
 
 const initialState = {};
 const enhancers = [];
-// const middleware = applyMiddleware(promise(), thunk, createLogger());
 const middleware = [
   promise(),
   thunk,
   routerMiddleware(history),
   createLogger()
 ];
-
 if (process.env.NODE_ENV === 'development') {
   const devToolsExtension = window.devToolsExtension;
 
@@ -25,7 +30,6 @@ if (process.env.NODE_ENV === 'development') {
     enhancers.push(devToolsExtension());
   }
 }
-
 const composedEnhancers = compose(
   applyMiddleware(...middleware),
   ...enhancers
@@ -37,4 +41,5 @@ const store = createStore(
   composedEnhancers
 );
 
+// Export
 export default store;

@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rendering App (Snapshot Test) renders without crashing 1`] = `
+<div
+  className="App"
+>
+  <div
+    className="Welcome"
+  >
+    <div
+      className="Welcome-header"
+    >
+      <img
+        alt="logo"
+        className="Welcome-logo loaded"
+        src="logo.svg"
+      />
+      <h2>
+        Welcome to Chess
+      </h2>
+    </div>
+    <p
+      className="Welcome-intro"
+    >
+      <button
+        onClick={[Function]}
+      >
+        Start Game As Guest
+      </button>
+    </p>
+  </div>
+</div>
+`;

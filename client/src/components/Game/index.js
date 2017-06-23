@@ -1,9 +1,14 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react';
+import './game.css';
+import Table from './table/';
 
-export default () => (
-  <div>
-    <p>Hello from Game!</p>
-    <Link to="/">App</Link>
-  </div>
-);
+const Game = () => {
+  return (
+    <div className="Game">
+      <h1>Chess</h1>
+      <Table />
+    </div>  
+  )
+}
+
+export default Game;

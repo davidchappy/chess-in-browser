@@ -1,0 +1,15 @@
+.Tile {
+  height: 100%;
+  width: 12.5%;
+  background: #747174;
+  display: inline-block;
+  position: relative;
+}
+
+.light {
+  background-color: #E6E6E6;
+}
+
+.dark {
+  background-color: #747174;
+}

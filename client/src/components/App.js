@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createGuestGame } from '../actions/chessActions';
 import './App.css';
-// import { push } from 'react-router-redux';
 import { bindActionCreators } from 'redux';
-// import { Route, Switch } from 'react-router-dom';
 import Game from './Game';
 import Welcome from './Welcome';
 
@@ -40,11 +38,6 @@ export class App extends Component {
     );
   }
 }
-
-//         <Switch>
-//   <Route exact path='/' component={Welcome} />
-//   <Route exact path='/game' component={Game} />
-// </Switch>
 
 const mapStateToProps = (state, ownProps) => {
   return {

@@ -1,6 +1,8 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
+import { shallow } from 'enzyme';
 import { App } from './App';
+import { Game } from './Game/';
 
 describe('rendering App (Snapshot Test)', () => {
   const component = renderer.create(<App />);
@@ -15,7 +17,7 @@ describe('rendering App (Snapshot Test)', () => {
   });
 
   it('renders Game if server data has been fetched', () => {
-    const componentWithData = renderer.create(<App fetched={true}/>);
-    const gameJson = componentWithData.toJSON();
+    const appWithGameWrapper = shallow(<App fetched={true} />);
+    expect(appWithGameWrapper.node.props['children']['type']['displayName']).toBe('Connect(Game)');
   });
 });

@@ -5,7 +5,7 @@ import './table.css';
 const Table = (props) => {
   return (
     <div className="Table">
-      <Board />
+      <Board {...props}/>
     </div>
   )
 };

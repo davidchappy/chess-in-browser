@@ -31,7 +31,6 @@ module Chess
         piece_moves = Chess::Piece.get_piece_moves(game.board, piece)
         all_moves[piece.name] = piece_moves unless piece_moves == {}
       end
-      # byebug
       # get_castle_moves(game, all_moves)
 
       all_moves      
@@ -71,15 +70,19 @@ module Chess
     end
 
     # Assign board's piece positions to player's pieces and return pieces
-    def self.update_pieces(player_pieces, board)
-      player_pieces.each do |piece|
-        board_piece = board.select{|t, val| val if val != "" && val.name == piece.name}.values[0]
-        if(piece.position != board_piece.position)
+    def self.update_pieces(game)
+      board  = game.board
+      pieces = game.pieces
+
+      pieces.each do |piece|
+        board_position = board.select{|t, val| val != "" && val.name == piece.name}.keys[0].to_s
+        if(piece.position != board_position)
+          p board_position
           piece.has_moved = true
-          piece.position = board_piece.position
+          piece.position = board_position
         end
       end
-      player_pieces
+      game.pieces = pieces
     end
 
     # Private

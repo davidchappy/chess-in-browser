@@ -18,17 +18,12 @@ export default function chessReducer(state={
         ...state,
         fetching: false,
         fetched: true,
-        white: action.payload.data.white,
-        black: action.payload.data.black,
-        game: action.payload.data.game
       }
     }
     case 'CREATE_GUEST_GAME_REJECTED': {
       return { ...state, fetching: false, error: action.payload.data}
     }
     case 'SELECT_PIECE': {
-      console.log('action.payload', action.payload);
-
       return {
         ...state, 
         moving: true,
@@ -49,14 +44,25 @@ export default function chessReducer(state={
       return {
         ...state,
         fetching: false,
-        fetched: true,
-        white: action.payload.data.white,
-        black: action.payload.data.black,
-        game: action.payload.data.game
+        fetched: true
       }
     }
     case 'MOVE_PIECE_REJECTED': {
       return {...state, fetching: false, error: action.payload.data}
+    }
+    case 'UPDATE_GAME_STATE': {
+      return {
+        ...state,
+        white: action.payload.white,
+        black: action.payload.black,
+        game: action.payload.game
+      }
+    }
+    case 'EAGER_UPDATE_GAME_STATE': {
+      return {
+        ...state,
+        game: action.payload 
+      }
     }
     default: {
       return state;

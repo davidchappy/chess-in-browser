@@ -33,8 +33,7 @@ module GameUpdate
   end
 
   def update_pieces(game)
-    Chess::Game.update_pieces(game.white_pieces, game.board).each(&:save!)
-    Chess::Game.update_pieces(game.black_pieces, game.board).each(&:save!)
+    Chess::Game.update_pieces(game).each(&:save!)
   end
 
   private

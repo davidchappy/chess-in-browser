@@ -4,9 +4,9 @@ import Tile from './tile';
 
 const Board = (props) => {
 
-  const getAllPieces = () => {
-    return props.game.white_pieces.concat(props.game.black_pieces); 
-  }
+  // const getAllPieces = () => {
+  //   return props.game.white_pieces.concat(props.game.black_pieces); 
+  // }
 
   // create 2-dim. array with tile rows from game.board data
   const tileNames = Object.keys(props.game.board);
@@ -25,7 +25,7 @@ const Board = (props) => {
     } 
   }
 
-  const allPieces = getAllPieces();
+  const allPieces = props.game.pieces;
   // map through 2dim array of tiles and return rows of Tiles
   const tiles = allRows.map((rowArray, i) => {
     let rowType = i % 2 === 0 ? 0 : 1;

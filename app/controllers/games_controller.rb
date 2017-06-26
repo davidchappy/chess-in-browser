@@ -24,7 +24,6 @@ class GamesController < ApplicationController
   end
 
   def update
-    p params[:move]
     @game, @white, @black = @game.update(params[:move])
     render json: game_response
   end
@@ -41,7 +40,8 @@ class GamesController < ApplicationController
 
     def game_response
       response = {
-        game: serialize(@game, {  white_pieces: { include: :moves }, 
+        game: serialize(@game, {  pieces: { include: :moves },
+                                  white_pieces: { include: :moves }, 
                                   black_pieces: { include: :moves } } ),
         white: @white,
         black: @black

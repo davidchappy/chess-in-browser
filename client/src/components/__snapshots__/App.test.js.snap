@@ -8,11 +8,11 @@ exports[`rendering App (Snapshot Test) renders without crashing 1`] = `
     className="Welcome"
   >
     <div
-      className="Welcome-header"
+      className="chess-header large"
     >
       <img
         alt="logo"
-        className="Welcome-logo loaded"
+        className="chess-logo loaded large"
         src="logo.svg"
       />
       <h2>

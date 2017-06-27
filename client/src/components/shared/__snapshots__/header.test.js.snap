@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rendering Header (Snapshot Test) renders without crashing 1`] = `
+<div
+  className="chess-header large"
+>
+  <img
+    alt="logo"
+    className="chess-logo loaded large"
+    src="logo.svg"
+  />
+</div>
+`;

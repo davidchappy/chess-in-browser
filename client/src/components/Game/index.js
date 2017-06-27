@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import './game.css';
+import './Game.css';
 import Table from './table/';
-import { selectPiece } from '../../actions/chessActions';
-import { movePiece } from '../../actions/chessActions';
+import Header from '../shared/header';
+import { selectPiece, movePiece } from '../../actions/chessActions';
 
 export class Game extends Component {
   constructor(props) {
@@ -16,7 +16,7 @@ export class Game extends Component {
   render() {
     return (
       <div className="Game">
-        <h1>Chess</h1>
+        <Header {...this.props} headerSize="small" />
         <Table {...this.props} />
       </div>  
     )
@@ -30,7 +30,9 @@ const mapStateToProps = (state, ownProps) => {
     black: state.chess.black,
     moving: state.chess.moving,
     selectedPiece: state.chess.selectedPiece,
-    selectableTiles: state.chess.selectableTiles
+    selectableTiles: state.chess.selectableTiles,
+    fetching: state.chess.fetching,
+    fetched: state.chess.fetched
   }
 }
 

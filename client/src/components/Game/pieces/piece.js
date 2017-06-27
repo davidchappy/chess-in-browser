@@ -6,7 +6,7 @@ const Piece = (props) => {
   const color = props.piece.color + " ";
 
   let selectableClass = "", clickable = {};
-  if(props.piece.moves.length) {
+  if(props.piece.moves.length && !props.fetching) {
     selectableClass = 'selectable ';
     clickable = {
       onClick: props.selectPiece.bind(this, props.piece)

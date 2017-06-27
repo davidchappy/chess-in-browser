@@ -15,7 +15,9 @@ describe('rendering App (Snapshot Test)', () => {
   it('renders Welcome by default', () => {
     expect(json.children[0].props['className']).toBe('Welcome');
   });
+});
 
+describe('rendering App (mount test)', () => {
   it('renders Game if server data has been fetched', () => {
     const appWithGameWrapper = shallow(<App fetched={true} />);
     expect(appWithGameWrapper.node.props['children']['type']['displayName']).toBe('Connect(Game)');

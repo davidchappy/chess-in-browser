@@ -1,4 +1,10 @@
-export default function chessReducer(state={
+import {  CREATE_GUEST_GAME, CREATE_GUEST_GAME_FULFILLED,
+          CREATE_GUEST_GAME_REJECTED, UPDATE_GAME_STATE,
+          EAGER_UPDATE_GAME_STATE, SELECT_PIECE,
+          MOVE_PIECE, MOVE_PIECE_FULFILLED, MOVE_PIECE_REJECTED } from '../actions/actionTypes';
+
+
+const initialState = {
   fetched: false,
   fetching: false,
   moving: false,
@@ -8,22 +14,24 @@ export default function chessReducer(state={
   white: undefined,
   black: undefined,
   game: undefined
-}, action) {
+}
+
+export default function chessReducer(state=initialState, action) {
   switch (action.type) {
-    case 'CREATE_GUEST_GAME': {
+    case CREATE_GUEST_GAME: {
       return {...state, fetching: true}
     }
-    case 'CREATE_GUEST_GAME_FULFILLED': {
+    case CREATE_GUEST_GAME_FULFILLED: {
       return {
         ...state,
         fetching: false,
         fetched: true,
       }
     }
-    case 'CREATE_GUEST_GAME_REJECTED': {
+    case CREATE_GUEST_GAME_REJECTED: {
       return { ...state, fetching: false, error: action.payload.data}
     }
-    case 'SELECT_PIECE': {
+    case SELECT_PIECE: {
       return {
         ...state, 
         moving: true,
@@ -31,7 +39,7 @@ export default function chessReducer(state={
         selectedPiece: action.payload 
       }
     }
-    case 'MOVE_PIECE': {
+    case MOVE_PIECE: {
       return {
         ...state, 
         fetching: true,
@@ -40,17 +48,17 @@ export default function chessReducer(state={
         selectedPiece: undefined
       }
     }
-    case 'MOVE_PIECE_FULFILLED': {
+    case MOVE_PIECE_FULFILLED: {
       return {
         ...state,
         fetching: false,
         fetched: true
       }
     }
-    case 'MOVE_PIECE_REJECTED': {
+    case MOVE_PIECE_REJECTED: {
       return {...state, fetching: false, error: action.payload.data}
     }
-    case 'UPDATE_GAME_STATE': {
+    case UPDATE_GAME_STATE: {
       return {
         ...state,
         white: action.payload.white,
@@ -58,7 +66,7 @@ export default function chessReducer(state={
         game: action.payload.game
       }
     }
-    case 'EAGER_UPDATE_GAME_STATE': {
+    case EAGER_UPDATE_GAME_STATE: {
       return {
         ...state,
         game: action.payload 

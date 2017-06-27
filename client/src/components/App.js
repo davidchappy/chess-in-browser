@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createGuestGame } from '../actions/chessActions';
 import './App.css';
-import { bindActionCreators } from 'redux';
 import Game from './Game';
 import Welcome from './Welcome';
 

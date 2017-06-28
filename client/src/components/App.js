@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createGuestGame } from '../actions/chessActions';
-import './App.css';
 import Game from './Game';
 import Welcome from './Welcome';
 
@@ -41,8 +40,8 @@ export class App extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    fetching: state.chess.fetching,
-    fetched: state.chess.fetched,
+    fetching: state.request.fetching,
+    fetched: state.request.fetched,
   }
 }
 

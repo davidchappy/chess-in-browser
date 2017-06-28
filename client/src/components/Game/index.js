@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import './Game.css';
 import Table from './table/';
-import Header from '../shared/header';
+import Header from '../_shared/header';
 import { selectPiece, movePiece } from '../../actions/chessActions';
 
 export class Game extends Component {
@@ -28,11 +27,12 @@ const mapStateToProps = (state, ownProps) => {
     game: state.chess.game,
     white: state.chess.white,
     black: state.chess.black,
-    moving: state.chess.moving,
+    pieces: state.chess.pieces,
+    board: state.chess.board,
     selectedPiece: state.chess.selectedPiece,
     selectableTiles: state.chess.selectableTiles,
-    fetching: state.chess.fetching,
-    fetched: state.chess.fetched
+    fetching: state.request.fetching,
+    fetched: state.request.fetched
   }
 }
 

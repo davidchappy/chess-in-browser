@@ -1,16 +1,24 @@
-import React from 'react';
-import './Welcome.css';
-import Header from '../shared/header';
+import React, { Component } from 'react';
+import Header from '../_shared/header';
+import Intro from './intro';
 
-const Welcome = (props) => {
-  return (
-    <div className="Welcome">
-      <Header {...props} welcome={true} />
-      <p className="Welcome-intro">
-        <button onClick={() => props.createGuestGame("Alex", "Lucas")}>Start Game As Guest</button>
-      </p>
-    </div>
-  )
+export default class Welcome extends Component {
+  constructor(props) {
+    super(props);
+  
+    this.state = {};
+  }
+
+  createGuestGame() {
+    this.props.createGuestGame("Alex", "Lucas");
+  }
+
+  render() {
+    return (
+      <div className="Welcome">
+        <Header {...this.props} welcome={true} />
+        <Intro createGuestGame={this.createGuestGame.bind(this)} />
+      </div>
+    )
+  }
 }
-
-export default Welcome;

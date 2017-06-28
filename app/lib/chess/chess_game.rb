@@ -50,7 +50,7 @@ module Chess
 
       # evaluate scenarios
       case 
-      when flags.nil? || flags.empty? || flags == ""
+      when flags.nil? || flags.empty? || flags == "" || flags == [""]
       when flags.include("check")
         game.status = "check"
       when flags.include("castling")

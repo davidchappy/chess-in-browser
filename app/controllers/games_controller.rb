@@ -15,7 +15,7 @@ class GamesController < ApplicationController
 
     # Create game and respond
     @game, @white, @black = Game.start(white, black)
-    render json: game_response
+    render json: game_response, status: 200
   end
 
   def show
@@ -25,7 +25,7 @@ class GamesController < ApplicationController
 
   def update
     @game, @white, @black = @game.update(params[:move])
-    render json: game_response
+    render json: game_response, status: 200
   end
 
   private

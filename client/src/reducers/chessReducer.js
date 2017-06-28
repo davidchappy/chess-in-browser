@@ -19,13 +19,6 @@ export default function chessReducer(state=initialState, action) {
         selectedPiece: action.payload 
       }
     }
-    case types.MOVE_PIECE: {
-      return {
-        ...state, 
-        selectableTiles: [],
-        selectedPiece: undefined
-      }
-    }
     case types.UPDATE_GAME_STATE: {
       return {
         ...state,
@@ -41,7 +34,9 @@ export default function chessReducer(state=initialState, action) {
         ...state,
         game: action.payload,
         pieces: action.payload.pieces,
-        board: action.payload.board 
+        board: action.payload.board,
+        selectableTiles: [],
+        selectedPiece: undefined 
       }
     }
     default: {

@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rendering Game (Snapshot Test) renders without crashing 1`] = `
+<div
+  className="Game"
+>
+  <div
+    className="chess-header small"
+  >
+    <img
+      alt="logo"
+      className="chess-logo loading small"
+      src="logo.svg"
+    />
+  </div>
+  <div
+    className="Table"
+  >
+    <div
+      className="Board"
+    >
+      <div
+        className="tiles"
+      />
+    </div>
+  </div>
+</div>
+`;

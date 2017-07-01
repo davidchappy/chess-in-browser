@@ -69,7 +69,7 @@ class Game < ApplicationRecord
       # game_update
       set_turn(self.white, self.black)
       get_moves(self)
-      set_status(self, "playing")
+      set_status("playing")
     end
 
     def update_tasks(move)

@@ -46,17 +46,19 @@ module Chess
       # move is a hash ( from => from_tile, to => to_tile, flags => flags )
       from  = move["from"]
       to    = move["to"]
-      flags = move["flags"].split(" ") if move["flags"]     
+      flags = move["flags"].flatten if move["flags"]     
       piece = new_board[from.to_sym] unless new_board[from.to_sym] == ""
 
       # empty out the start square
       new_board[from.to_sym] = ""
 
+      puts "flags"
       # evaluate scenarios
       case 
       when flags.nil? || flags.empty? || flags == "" || flags == [""]
       when flags.include?("check")
-        game.status = "check"
+        puts "setting status to check"
+        game.set_status("check")
       when flags.include?("castling")
         castle(new_board, piece, to)
       when flags.include?("en_passant")

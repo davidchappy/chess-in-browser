@@ -11,9 +11,9 @@ module GameUpdate
     game
   end
 
-  def set_status(game, status="playing")
-    game.status = status
-    game.save!
+  def set_status(status="playing")
+    self.status = status
+    self.save!
   end
 
   def set_turn(white, black) 

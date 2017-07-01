@@ -3,43 +3,48 @@ module Chess
   class Board
 
     def valid_tile?(coordinate, board)
+      board = game.board
       return true if !coordinate.nil? && board.keys.include?(coordinate.to_sym)
       false
     end
 
-    def is_piece?(coordinate, board)
+    def open_tile?(coordinate, game)
+      board = game.board
+      return true if valid_tile?(coordinate, board) && !is_piece?(coordinate, game)
+      false
+    end
+
+    def is_piece?(coordinate, game)
+      piece = game.find_on_board(coordinate)
       classes = [Piece, Rook, Bishop, Knight, King, Queen, Pawn]
-      return true if !coordinate.nil? && classes.include?(board[coordinate.to_sym].class)
+      return true if !coordinate.nil? && classes.include?(piece.class)
       false
     end
 
-    def open_tile?(coordinate, board)
-      return true if valid_tile?(coordinate, board) && !is_piece?(coordinate, board)
+    def is_enemy?(coordinate, player_color, game)
+      piece = game.find_on_board(coordinate)
+      return true if is_piece?(coordinate, game) && player_color != piece.color
       false
     end
 
-    def is_enemy?(coordinate, player_color, board)
-      return true if is_piece?(coordinate, board) && player_color != board[coordinate.to_sym].color
+    def obstructed?(coordinate, player_color, game)
+      return true if is_piece?(coordinate, game) && !is_enemy?(coordinate, player_color, game)
       false
     end
 
-    def obstructed?(coordinate, player_color, board)
-      return true if is_piece?(coordinate, board) && !is_enemy?(coordinate, player_color, board)
-      false
-    end
-
-    def en_passant?(pawn, board)
+    def en_passant?(pawn, game)
+      board = game.board
       if pawn.type == "Pawn"
         col_as_num = pawn.position[0].ord
         row = pawn.position[1]
         right_position = "#{(col_as_num+1).chr}#{row}"
         left_position = "#{(col_as_num-1).chr}#{row}"
         if pawn.color == "white" && row == "5"
-          return true if !board[right_position.to_sym].nil? && is_enemy?(right_position, pawn.color, board) 
-          return true if !board[left_position.to_sym].nil? && is_enemy?(left_position, pawn.color, board) 
+          return true if !board[right_position.to_sym].nil? && is_enemy?(right_position, pawn.color, game) 
+          return true if !board[left_position.to_sym].nil? && is_enemy?(left_position, pawn.color, game) 
         elsif pawn.color == "black" && row == "4"
-          return true if !board[right_position.to_sym].nil? && is_enemy?(right_position, pawn.color, board) 
-          return true if !board[left_position.to_sym].nil? && is_enemy?(left_position, pawn.color, board) 
+          return true if !board[right_position.to_sym].nil? && is_enemy?(right_position, pawn.color, game) 
+          return true if !board[left_position.to_sym].nil? && is_enemy?(left_position, pawn.color, game) 
         end
       end
       false

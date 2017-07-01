@@ -44,6 +44,15 @@ class Game < ApplicationRecord
     self.pieces.where(color: "black")
   end
 
+  def find_on_board(coordinate)
+    target = self.board[coordinate.to_sym]
+    if target == "" || target.nil?
+      return ""
+    else 
+      return self.pieces.find(target.to_i)
+    end
+  end
+
   private
 
     # The methods below are found in ./concerns

@@ -46,7 +46,7 @@ module GamePrep
       pieces.each do |piece|
         position = piece.position.to_sym
         if board.keys.include?(position) 
-          board[position] = piece
+          board[position] = piece.id
         end
       end
       game.board = board

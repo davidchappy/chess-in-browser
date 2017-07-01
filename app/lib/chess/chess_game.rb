@@ -32,7 +32,7 @@ module Chess
         # If game is in check, assign moves only to King
         next if game.status == 'check' && piece.type != 'King'
         # Get available moves for this piece and add to all_moves hash
-        piece_moves = Chess::Piece.get_piece_moves(game.board, piece)
+        piece_moves = Chess::Piece.get_piece_moves(piece, game)
         all_moves[piece.name] = piece_moves unless piece_moves == {} || piece_moves.nil? 
       end
       

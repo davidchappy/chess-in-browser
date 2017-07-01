@@ -40,7 +40,7 @@ class GamesController < ApplicationController
     def game_response
       response = {
         game: @game,
-        pieces: serialize(@game.pieces, :moves ),
+        pieces: serialize(@game.pieces, :moves),
         white: @game.white,
         black: @game.black
       }

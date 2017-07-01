@@ -45,11 +45,11 @@ module Chess
     def self.get_piece_moves(board, piece)
       piece_type = Chess::Piece.new.get_type(piece)
       piece_moves = piece_type.moves(board, piece)
-      # piece_moves.each do |destination, flags|
-      #   if Chess::Piece.new.check?(piece, destination, board)
-      #     flags << "check" 
-      #   end
-      # end 
+      piece_moves.each do |destination, flags|
+        if Chess::Piece.new.check?(piece, destination, board)
+          flags << "check" 
+        end
+      end 
 
       # process_captures(piece_moves)
       return piece_moves
@@ -67,18 +67,20 @@ module Chess
           adjusted_offset = offset * i     
           coords = offsets_to_coordinates([adjusted_offset], board, piece)
           next_tile = coords unless coords.nil?
+          move = { next_tile => [] }
           case 
           when wrapped?(next_tile, last_tile)
             break
           when chess_board.is_piece?(next_tile, board)
-            if chess_board.is_enemy?(next_tile, piece.color, board)
-              moves.merge!( { next_tile => ["capturing"] } )
+            if next_tile != "" && chess_board.is_enemy?(next_tile, piece.color, board) 
+              move[next_tile] << "capturing"
+              moves.merge!( move ) 
               break
             else
               break
             end
           else
-            moves.merge!( { next_tile => [""] } ) unless next_tile == ""
+            moves.merge!( move ) unless next_tile == ""
           end
           i += 1
           last_tile = next_tile
@@ -132,11 +134,11 @@ module Chess
     end
 
     def check?(piece, move, board)
-      destination = move.keys.first.to_s
+      destination = move
       pretend_piece = piece
-      pretend_piece.position = destination
+      pretend_piece.position = destination.to_s
       pretend_board = board
-      pretend_board[destination.to_sym] = pretend_piece
+      pretend_board[destination] = pretend_piece
       king = board.select{|t, val| val if val && val != "" && val.type == "King" && val.color != piece.color}.values[0]
 
       piece_type = get_type(pretend_piece)
@@ -147,25 +149,6 @@ module Chess
       else 
         return false
       end
-
-      # attackers = []    
-      # other_player_pieces = []
-
-      # board.each do |tile, content|
-      #   if king && content != "" && content.color != king.color
-      #     other_player_pieces << content
-      #   end
-      # end
-
-      # other_player_pieces.each do |piece|
-      #   piece_type = get_type(piece)
-      #   p piece_type.moves(board, piece)
-      #   piece_type.moves(board, piece).each do |tile, flags|
-      #     attackers << piece if tile == king.position
-      #   end
-      # end
-
-      # return attackers.length > 0 ? true : false
     end
 
     class Pawn < Piece
@@ -211,11 +194,10 @@ module Chess
 
         legal_moves = offsets_to_coordinates(offsets, board, piece)
         if legal_moves.class == Array
-          legal_moves.each { |move| possible_moves[move] = "" unless chess_board.obstructed?(move, piece.color, board) }
+          legal_moves.each { |move| possible_moves[move] = [] unless chess_board.obstructed?(move, piece.color, board) }
         else
-          possible_moves[legal_moves] = "" unless chess_board.obstructed?(legal_moves, piece.color, board)
+          possible_moves[legal_moves] = [] unless chess_board.obstructed?(legal_moves, piece.color, board)
         end
-        # byebug  
         possible_moves
       end
 
@@ -244,7 +226,7 @@ module Chess
           elsif chess_board.obstructed?(move, piece.color, board)
             next
           else
-            possible_moves[move] = ""
+            possible_moves[move] = []
           end
         end
         possible_moves
@@ -284,7 +266,6 @@ module Chess
       def moves(board, piece)
         offsets = [-9,-8,-7,-1,1,7,8,9]
         queen_moves = generate_paths_for(offsets, board, piece)
-        # byebug
       end
 
     end
@@ -297,7 +278,7 @@ module Chess
         legal_moves = offsets_to_coordinates(offsets, board, piece)
         legal_moves.each do |move| 
           unless chess_board.obstructed?(move, piece.color, board) || move.nil?
-            possible_moves[move] = "" 
+            possible_moves[move] = [] 
           end
         end
         possible_moves

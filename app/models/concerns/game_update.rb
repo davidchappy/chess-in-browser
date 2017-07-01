@@ -50,9 +50,16 @@ module GameUpdate
         if moves.has_key?(piece.name)
           piece_moves = moves[piece.name]
           piece_moves.each do |destination, flags|
+            if flags.class == String
+              if flags == ""
+                flags = [] 
+              else 
+                flags = flags.to_a
+              end
+            end
             piece.moves.create!(from: piece.position, to: destination, flags: flags) unless destination.nil?
           end
-          piece.save!
+          # piece.save!
         end
         # game.board[piece.position.to_sym] = piece
       end

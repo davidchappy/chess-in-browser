@@ -46,6 +46,8 @@ class Game < ApplicationRecord
 
   private
 
+    # The methods below are found in ./concerns
+    
     def start_tasks
       # game_prep
       game = generate_pieces(self).save!

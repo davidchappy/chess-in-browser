@@ -27,12 +27,19 @@ module Chess
       player_color = game.white == player ? "white" : "black"
       all_moves = {}
       game.pieces.each do |piece|
+        # Assign moves only to current player's pieces
         next if piece.color != player_color
+        # If game is in check, assign moves only to King
+        next if game.status == 'check' && piece.type != 'King'
+        # Get available moves for this piece and add to all_moves hash
         piece_moves = Chess::Piece.get_piece_moves(game.board, piece)
-        all_moves[piece.name] = piece_moves unless piece_moves == {}
+        all_moves[piece.name] = piece_moves unless piece_moves == {} || piece_moves.nil? 
       end
-      # get_castle_moves(game, all_moves)
+      
+      # If no valid moves, declare check mate
+      game.status = 'check_mate' if all_moves.size == 0
 
+      # get_castle_moves(game, all_moves)
       all_moves      
     end
 
@@ -77,7 +84,6 @@ module Chess
       pieces.each do |piece|
         board_position = board.select{|t, val| val != "" && val.name == piece.name}.keys[0].to_s
         if(piece.position != board_position)
-          p board_position
           piece.has_moved = true
           piece.position = board_position
         end
@@ -95,7 +101,7 @@ module Chess
           all_moves[king_name].merge!(castle_moves.first[1])
         end
         all_moves
-      end
+      end 
 
       # Startup helpers
       def starting_positions(pieces, color)
@@ -187,6 +193,7 @@ module Chess
 
       def move(board, piece, to)
         board[to.to_sym] = piece
+        # piece position is not changed here but in .update_pieces
       end
 
       # Helper helpers

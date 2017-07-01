@@ -140,21 +140,21 @@ module Chess
 
     def check?(piece, destination, game)
       # Copy values to create pretend scenario
-      pretend_piece = piece
+      pretend_piece = piece.dup
       pretend_piece.position = destination.to_s
-      pretend_game = game
-      pretend_game.board[destination] = pretend_piece.id
-      king_color = piece.color == 'white' ? 'black' : 'white'
-      king = game.pieces.where(type: 'King', color: king_color).take
+      # game.board[destination] = pretend_piece.id
+      king_color = pretend_piece.color == 'white' ? 'black' : 'white'
+      king = game.pieces.where(type: 'King', color: king_color).take.dup
 
       piece_type = get_type(pretend_piece)
-      moves = piece_type.moves(pretend_piece, pretend_game)
+      moves = piece_type.moves(pretend_piece, game)
 
       if moves.keys.include?(king.position)
         return true
       else 
         return false
       end
+      false
     end
 
     # Piece moves stored in pieces/piece_*.rb

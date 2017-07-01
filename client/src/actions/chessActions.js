@@ -36,7 +36,7 @@ export function movePiece(selectedMove, game, pieces) {
   }
 
   return function(dispatch) {
-    dispatch(eagerUpdateGameState(move, game, pieces));
+    // dispatch(eagerUpdateGameState(move, game, pieces));
     dispatch(serverRequested());
 
     return axios.put(`/api/games/${game.id}`, {move})

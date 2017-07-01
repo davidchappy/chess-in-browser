@@ -35,9 +35,6 @@ module Chess
         piece_moves = Chess::Piece.get_piece_moves(piece, game)
         all_moves[piece.name] = piece_moves unless piece_moves == {} || piece_moves.nil? 
       end
-      
-      # If no valid moves, declare check mate
-      game.status = 'check_mate' if all_moves.size == 0
 
       # get_castle_moves(game, all_moves)
       all_moves      
@@ -58,15 +55,15 @@ module Chess
       # evaluate scenarios
       case 
       when flags.nil? || flags.empty? || flags == "" || flags == [""]
-      when flags.include("check")
+      when flags.include?("check")
         game.status = "check"
-      when flags.include("castling")
+      when flags.include?("castling")
         castle(new_board, piece, to)
-      when flags.include("en_passant")
+      when flags.include?("en_passant")
         en_passant(new_board, piece, to)
-      when flags.include("capture")
+      when flags.include?("capture")
         capture(new_board, piece, to)
-      when flags.include("promotion")
+      when flags.include?("promotion")
         game.status = "promoting"
       end
       # always move piece 
@@ -82,7 +79,7 @@ module Chess
       pieces = game.pieces
 
       pieces.each do |piece|
-        board_position = board.select{|t, val| val != "" && val.name == piece.name}.keys[0].to_s
+        board_position = game.position_by_id(piece.id)
         if(piece.position != board_position)
           piece.has_moved = true
           piece.position = board_position

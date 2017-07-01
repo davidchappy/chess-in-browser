@@ -53,6 +53,10 @@ class Game < ApplicationRecord
     end
   end
 
+  def position_by_id(piece_id)
+    board.select{|t, val| val == piece_id.to_i}.keys[0].to_s
+  end
+
   private
 
     # The methods below are found in ./concerns

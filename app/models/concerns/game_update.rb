@@ -2,10 +2,12 @@ module GameUpdate
   extend ActiveSupport::Concern
 
   def get_moves(game)
+    p game.pieces.where(name:"white-p1")
     purge_moves(game)
     moves = Chess::Game.get_moves(game, game.current_player)
+    # If no valid moves, declare check mate
+    game.status = 'check_mate' if moves.size == 0
     map_moves(game, moves)
-    game.save!
     game
   end
 
@@ -46,6 +48,7 @@ module GameUpdate
 
     # Add moves from hash to pieces as Move instances
     def map_moves(game, moves)
+      # moves is a nested hash
       game.current_pieces.each do |piece|
         if moves.has_key?(piece.name)
           piece_moves = moves[piece.name]
@@ -59,9 +62,7 @@ module GameUpdate
             end
             piece.moves.create!(from: piece.position, to: destination, flags: flags) unless destination.nil?
           end
-          # piece.save!
         end
-        # game.board[piece.position.to_sym] = piece
       end
       game.save!
     end

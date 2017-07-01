@@ -28,7 +28,7 @@ export function selectPiece(piece) {
   }
 }
 
-export function movePiece(selectedMove, game) {
+export function movePiece(selectedMove, game, pieces) {
   const move = {
     from: selectedMove.from,
     to: selectedMove.to,
@@ -36,7 +36,7 @@ export function movePiece(selectedMove, game) {
   }
 
   return function(dispatch) {
-    dispatch(eagerUpdateGameState(move, game));
+    dispatch(eagerUpdateGameState(move, game, pieces));
     dispatch(serverRequested());
 
     return axios.put(`/api/games/${game.id}`, {move})
@@ -54,7 +54,7 @@ export function movePiece(selectedMove, game) {
 // ** Private **
 
 // Update UI with move rather than waiting on server response
-function eagerUpdateGameState(move, game) {
+function eagerUpdateGameState(move, game, pieces) {
   const board = Object.assign({}, game.board);
   const board_piece = Object.assign({}, game.board[move.from]);
   board_piece.position = move.to;
@@ -62,13 +62,16 @@ function eagerUpdateGameState(move, game) {
   board[move.from] = "";
 
   const updated_game = JSON.parse(JSON.stringify(game));
-  const game_piece = updated_game.pieces.find(p => p.name === board_piece.name);
-  game_piece.position = move.to;
   updated_game.board = board;
+
+  const piece = pieces.find(p => p.name === board_piece.name);
+  const index = pieces.indexOf(piece);
+  piece.position = move.to;
+  pieces[index] = piece;
 
   return {
     type: types.EAGER_UPDATE_GAME_STATE, 
-    payload: updated_game
+    payload: { game: updated_game, pieces: pieces }
   }
 }
 

@@ -55,24 +55,26 @@ describe('chess reducer', () => {
   });
 
   it('should handle EAGER_UPDATE_GAME_STATE', () => {
-    const game = { 
-      id: 1, 
-      board: { "a2": { id: 1, position: "a2" } },
-      pieces: [ {id:1, position: "a2"} ],
+    const data = {
+      game: {
+        id: 1, 
+        board: { "a2": { id: 1, position: "a2" } },
+      },      
+      pieces: [ {id:1, position: "a2"} ]
     }
 
     expect(
       reducer({}, {
         type: types.EAGER_UPDATE_GAME_STATE,
-        payload: game
+        payload: data
       })
     ).toEqual({
       ...initialState,
       chess: {
         ...initialState.chess,
-        game: game,
-        board: game.board,
-        pieces: game.pieces,
+        game: data.game,
+        board: data.game.board,
+        pieces: data.pieces,
         selectableTiles: [],
         selectedPiece: undefined 
       }

@@ -20,12 +20,12 @@ class Game < ApplicationRecord
 
   def self.start(white, black)
     game = Game.create!(white: white, black: black, status: "starting")
-    [game, game.white, game.black]
+    game
   end
 
   def update(move)
     update_tasks(move)
-    [self, self.white, self.black]
+    self
   end
 
   def current_player

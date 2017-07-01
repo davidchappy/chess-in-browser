@@ -25,16 +25,16 @@ export default function chessReducer(state=initialState, action) {
         white: action.payload.white,
         black: action.payload.black,
         game: action.payload.game,
-        pieces: action.payload.game.pieces,
+        pieces: action.payload.pieces,
         board: action.payload.game.board
       }
     }
     case types.EAGER_UPDATE_GAME_STATE: {
       return {
         ...state,
-        game: action.payload,
+        game: action.payload.game,
         pieces: action.payload.pieces,
-        board: action.payload.board,
+        board: action.payload.game.board,
         selectableTiles: [],
         selectedPiece: undefined 
       }

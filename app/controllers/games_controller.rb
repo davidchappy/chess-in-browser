@@ -14,17 +14,16 @@ class GamesController < ApplicationController
     end
 
     # Create game and respond
-    @game, @white, @black = Game.start(white, black)
+    @game = Game.start(white, black)
     render json: game_response, status: 200
   end
 
   def show
-    @white, @black = [@game.white, @game.black]
     render json: game_response
   end
 
   def update
-    @game, @white, @black = @game.update(params[:move])
+    @game = @game.update(params[:move])
     render json: game_response, status: 200
   end
 
@@ -40,11 +39,10 @@ class GamesController < ApplicationController
 
     def game_response
       response = {
-        game: serialize(@game, {  pieces: { include: :moves },
-                                  white_pieces: { include: :moves }, 
-                                  black_pieces: { include: :moves } } ),
-        white: @white,
-        black: @black
+        game: @game,
+        pieces: serialize(@game.pieces, :moves ),
+        white: @game.white,
+        black: @game.black
       }
     end
 end

@@ -59,16 +59,20 @@ describe('actions', () => {
       const pieceAfterMove = { ...piece, position: "a3" };
 
       const gameData = {
-        id: 1,
-        board: { "a2": piece },
+        game: {
+          id: 1,
+          board: { "a2": piece },
+        },
         pieces: [piece] 
       }
 
       const updatedGameData = {
-        ...gameData,
-        board: {
-          "a2": "",
-          "a3": pieceAfterMove
+        game: {
+          id: 1,
+          board: {
+            "a2": "",
+            "a3": pieceAfterMove
+          },
         },
         pieces: [pieceAfterMove]
       }
@@ -95,7 +99,7 @@ describe('actions', () => {
         game: {},
       })
 
-      return store.dispatch(actions.movePiece(move, gameData)).then(() => {
+      return store.dispatch(actions.movePiece(move, gameData.game, gameData.pieces)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       }) 
     });

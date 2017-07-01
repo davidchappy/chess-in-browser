@@ -13,7 +13,7 @@ const Tile = (props) => {
       return move.to === props.tile
     })
     clickable = {
-      onClick: props.movePiece.bind(this, move, props.game)
+      onClick: props.movePiece.bind(this, move, props.game, props.pieces)
     }
   }
 

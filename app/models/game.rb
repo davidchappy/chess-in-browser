@@ -57,6 +57,10 @@ class Game < ApplicationRecord
     board.select{|t, val| val == piece_id.to_i}.keys[0].to_s
   end
 
+  def find_piece_by_name(name)
+    self.pieces.select{ |piece| piece if piece.name == name}.first
+  end
+
   private
 
     # The methods below are found in ./concerns

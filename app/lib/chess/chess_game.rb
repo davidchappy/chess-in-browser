@@ -52,7 +52,6 @@ module Chess
       # empty out the start square
       new_board[from.to_sym] = ""
 
-      puts "flags"
       # evaluate scenarios
       case 
       when flags.nil? || flags.empty? || flags == "" || flags == [""]

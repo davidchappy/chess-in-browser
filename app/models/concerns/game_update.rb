@@ -2,7 +2,6 @@ module GameUpdate
   extend ActiveSupport::Concern
 
   def get_moves(game)
-    p game.pieces.where(name:"white-p1")
     purge_moves(game)
     moves = Chess::Game.get_moves(game, game.current_player)
     # If no valid moves, declare check mate

@@ -12,7 +12,7 @@ RSpec.describe Chess::Piece do
 
   describe '.get_piece_moves' do
     it 'returns hash of all moves for a piece' do
-      expect(described_class.get_piece_moves(valid_game.board, pawn)).to eq({"a3"=>"", "a4" => ""})
+      expect(described_class.get_piece_moves(pawn, valid_game)).to eq({"a3"=>[], "a4" => []})
     end
 
     # it 'returns check flag if move would place board in check' do
@@ -52,13 +52,13 @@ RSpec.describe Chess::Piece do
   describe '#check' do
     it "returns true if a move would cause check or false if not" do
       board_in_check = valid_game.board
-      board_in_check[:e2].position = "unplaced"
+      valid_game.find_on_board('e2').position = "unplaced"
       board_in_check[:e2] = ""
-      board_in_check[:f7].position = "unplaced"
+      valid_game.find_on_board('f7').position = "unplaced"
       board_in_check[:f7] = ""
       piece = queen
-      move = { "h5" => "" }
-      expect(described_class.new.check?(piece, move, board_in_check)).to eq(true)
+      move = "h5"
+      expect(described_class.new.check?(piece, move, valid_game)).to eq(true)
     end
   end
 
@@ -68,7 +68,7 @@ RSpec.describe Chess::Piece do
     describe '#moves' do
       it 'returns pawn moves given a board state and pawn model' do
         valid_game.board[:a3] = ""
-        expect(pawn_class.moves(valid_game.board, pawn).keys).to include("a3")
+        expect(pawn_class.moves(pawn, valid_game).keys).to include("a3")
       end
     end
   end
@@ -78,7 +78,7 @@ RSpec.describe Chess::Piece do
 
     describe '#moves' do
       it 'returns knight moves given a board state and knight model' do
-        expect(knight_class.moves(valid_game.board, knight).keys).to include("c3")
+        expect(knight_class.moves(knight, valid_game).keys).to include("c3")
       end
     end
 
@@ -118,12 +118,12 @@ RSpec.describe Chess::Piece do
 
     describe '#moves' do
       it 'returns rook moves given a board state and rook model' do
-        expect(rook_class.moves(valid_game.board, rook)).to eq({})
-        pawn = valid_game.board[:a2]
+        expect(rook_class.moves(rook, valid_game)).to eq({})
+        pawn = valid_game.find_on_board('a2')
         pawn.position = "unplaced"
         valid_game.board[:a2] = ""
         valid_game.board[:a3] = ""
-        expect(rook_class.moves(valid_game.board, rook).keys).to include("a7")
+        expect(rook_class.moves(rook, valid_game).keys).to include("a7")
       end
     end
   end

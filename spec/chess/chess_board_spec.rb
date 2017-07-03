@@ -8,11 +8,11 @@ RSpec.describe Chess::Board do
 
   describe "#is_piece?" do
     it "returns true if input is a valid tile on the board" do
-      expect(board_logic.is_piece?("a8", board)).to eq(true)
+      expect(board_logic.is_piece?("a8", valid_game)).to eq(true)
     end
 
     it "returns false if input is not a valid tile" do
-      expect(board_logic.is_piece?("a4", board)).to be(false)
+      expect(board_logic.is_piece?("a4", valid_game)).to be(false)
     end
   end
 

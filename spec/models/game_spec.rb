@@ -24,12 +24,10 @@ RSpec.describe Game, type: :model do
       let!(:black) { Guest.create(name: "Player 2") }
       let!(:game) { Game.start(white, black) }
 
-      it "should return an array with a game and 2 players/guests" do
-        expect(game).to be_a(Array)
-        expect(game.length).to eq(3)
-        expect(game[0]).to be_a(Game)
-        expect(game[1]).to be_a(Guest)
-        expect(game[2]).to be_a(Guest)
+      it "should return a valid game with 2 players/guests" do
+        expect(game).to be_a(Game)
+        expect(game.white).to be_a(Guest)
+        expect(game.black).to be_a(Guest)
       end
     end
 

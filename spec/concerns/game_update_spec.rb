@@ -5,7 +5,7 @@ RSpec.describe GameUpdate do
   let(:game) { create(:game) }
 
   describe "#set_status" do
-    before { set_status(game, "check") }
+    before { game.set_status("check") }
 
     it "marks game status as a valid status" do
       expect(game.status).to eq("check")

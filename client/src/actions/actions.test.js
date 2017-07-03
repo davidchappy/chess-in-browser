@@ -55,7 +55,7 @@ describe('actions', () => {
 
   describe('movePiece', () => {
     it('creates correct actions when moving piece', () => {
-      const piece = { position: "a2", name: "a piece" };
+      const piece = { id:2, position: "a2", name: "a piece" };
       const pieceAfterMove = { ...piece, position: "a3" };
 
       const gameData = {
@@ -71,7 +71,7 @@ describe('actions', () => {
           id: 1,
           board: {
             "a2": "",
-            "a3": pieceAfterMove
+            "a3": pieceAfterMove.id
           },
         },
         pieces: [pieceAfterMove]

@@ -2,6 +2,7 @@ import React from 'react';
 import './header.css';
 import './logo.css';
 import logo from './logo.svg';
+import Messages from './messages';
 
 const Header = (props) => {
   const sizeClass = props.headerSize ? props.headerSize : 'large';
@@ -10,7 +11,7 @@ const Header = (props) => {
     if(props.welcome) {
       return <h2>Welcome to Chess</h2>;
     } else {
-      return null;
+      return <Messages {...props} />;
     }
   }
 

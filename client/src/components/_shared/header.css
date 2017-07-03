@@ -5,8 +5,8 @@
 }
 
 .chess-header.small {
-  height: 60px;
-  padding: 5px;
+  height: 80px;
+  padding: 5px 0 20px;
   background-color: #3D3D3D;
 }
 

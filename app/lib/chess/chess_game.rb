@@ -43,29 +43,26 @@ module Chess
       from  = move["from"]
       to    = move["to"]
       flags = move["flags"].flatten if move["flags"]     
-      piece = new_board[from.to_sym] unless new_board[from.to_sym] == ""
-
-      # empty out the start square
-      new_board[from.to_sym] = ""
+      piece = game.find_on_board(from)
 
       # evaluate scenarios
       case 
       when flags.nil? || flags.empty? || flags == "" || flags == [""]
       when flags.include?("check")
-        puts "setting status to check"
         game.set_status("check")
       when flags.include?("castling")
         castle(new_board, piece, to)
       when flags.include?("en_passant")
         en_passant(new_board, piece, to)
-      when flags.include?("capture")
-        capture(new_board, piece, to)
       when flags.include?("promotion")
         game.status = "promoting"
       end
+
       # always move piece 
       move(new_board, piece, to)
 
+      # puts "board in chess_game.update_board"
+      # p new_board
       game.board = new_board
       game
     end
@@ -73,16 +70,20 @@ module Chess
     # Assign board's piece positions to player's pieces and return pieces
     def self.update_pieces(game)
       board  = game.board
-      pieces = game.pieces
 
-      pieces.each do |piece|
-        board_position = game.position_by_id(piece.id)
-        if(piece.position != board_position)
-          piece.has_moved = true
-          piece.position = board_position
+      game.pieces.each do |piece|
+        if !board.values.include?(piece.id)
+          piece.position = 'captured'
+        else 
+          board_position = game.position_by_id(piece.id)
+          if(board_position && piece.position != board_position)
+            piece.has_moved = true
+            p board_position
+            piece.position = board_position
+          end
         end
       end
-      game.pieces = pieces
+      game.pieces
     end
 
     # Private
@@ -179,14 +180,9 @@ module Chess
         
       end
 
-      def capture(board, piece, to)
-        captured_piece = board[to.to_sym]
-        captured_piece = game.pieces.select{|p| p if p.id == captured_piece.id }.first
-        captured_piece.position = "captured"
-      end
-
       def move(board, piece, to)
-        board[to.to_sym] = piece
+        board[piece.position.to_sym] = ""
+        board[to.to_sym] = piece.id
         # piece position is not changed here but in .update_pieces
       end
 

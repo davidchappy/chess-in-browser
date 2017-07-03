@@ -6,7 +6,7 @@ module GameUpdate
     moves = Chess::Game.get_moves(game)
     # If no valid moves, declare check mate
     game.status = 'check_mate' if moves.size == 0
-    map_moves(game, moves)
+    save_moves(moves, game)
     game
   end
 
@@ -46,7 +46,7 @@ module GameUpdate
     end
 
     # Add moves from hash to pieces as Move instances
-    def map_moves(game, moves)
+    def save_moves(moves, game)
       # moves is a nested hash
       game.current_pieces.each do |piece|
         if moves.has_key?(piece.name)

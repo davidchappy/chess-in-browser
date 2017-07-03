@@ -43,7 +43,7 @@ module GameUtils
   end
 
   def position_by_id(piece_id)
-    board.select{|t, val| val == piece_id.to_i}.keys[0].to_s
+    self.board.select{|t, val| val.to_i == piece_id}.keys[0].to_s
   end
 
   def find_piece_by_name(name)

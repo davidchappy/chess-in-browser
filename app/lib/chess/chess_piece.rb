@@ -32,12 +32,19 @@ module Chess
       game.pieces.each do |piece|
         # Assign moves only to current player's pieces
         next if piece.color != game.current_color
+
+        # Don't get moves for a captured piece
+        next if piece.position == 'captured'
+
         # If game is in check, assign (limited) moves only to King
         piece_type = Chess::Piece.new.get_type(piece)
         piece_moves = piece_type.moves(piece, game)
         piece_moves.each do |destination, flags|
           if Chess::Piece.new.check?(piece, destination, game)
             flags << "check" 
+          end
+          if Chess::Board.new.is_enemy?(destination, piece.color, game)
+            flags << "capturing" 
           end
         end 
         # Get available moves for this piece and add to all_moves hash
@@ -61,6 +68,7 @@ module Chess
       
       # Loop through other player's possible moves to limit king's moves
       game.other_pieces.each do |piece|
+        next if piece.position == 'captured'
         piece_type = piece_logic.get_type(piece)
         piece_moves = piece_type.moves(piece, game)
         piece_moves.each do |tile, flags|
@@ -109,7 +117,6 @@ module Chess
             break
           when chess_board.is_piece?(next_tile, game)
             if next_tile != "" && chess_board.is_enemy?(next_tile, piece.color, game) 
-              move[next_tile] << "capturing"
               moves.merge!( move ) 
               break
             else

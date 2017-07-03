@@ -10,7 +10,7 @@ module Chess
         legal_moves = offsets_to_coordinates(offsets, piece, game)
         legal_moves.each do |move| 
           unless chess_board.obstructed?(move, piece.color, game) || move.nil?
-            possible_moves[move] = [] 
+            possible_moves[move] = []
           end
         end
         possible_moves

@@ -2,22 +2,21 @@ module Chess
 
   class Board
 
-    def valid_tile?(coordinate, board)
+    def valid_tile?(coordinate, game)
       board = game.board
       return true if !coordinate.nil? && board.keys.include?(coordinate.to_sym)
       false
     end
 
     def open_tile?(coordinate, game)
-      board = game.board
-      return true if valid_tile?(coordinate, board) && !is_piece?(coordinate, game)
+      return true if valid_tile?(coordinate, game) && !is_piece?(coordinate, game)
       false
     end
 
     def is_piece?(coordinate, game)
       piece = game.find_on_board(coordinate)
       classes = [Piece, Rook, Bishop, Knight, King, Queen, Pawn]
-      return true if !coordinate.nil? && classes.include?(piece.class)
+      return true if !coordinate.nil? && coordinate != "" && classes.include?(piece.class)
       false
     end
 

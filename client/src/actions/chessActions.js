@@ -56,7 +56,6 @@ export function movePiece(selectedMove, game, pieces) {
 // Update UI with move rather than waiting on server response
 function eagerUpdateGameState(move, game, pieces) {
   const updated_game = JSON.parse(JSON.stringify(game));
-  const updated_pieces = Object.assign({}, pieces);
   const piece = pieces.find(p => p.position === move.from);
 
   updated_game.board[move.to] = piece.id;

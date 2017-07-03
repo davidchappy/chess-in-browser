@@ -47,7 +47,7 @@ RSpec.describe Chess::Game do
   end
 
   describe '.get_moves' do
-    let(:moves) { Chess::Game.get_moves(valid_game, valid_game.current_player) }
+    let(:moves) { Chess::Game.get_moves(valid_game) }
     
     it "returns a hash with piece names as keys" do
       expect(moves).to be_a(Hash)

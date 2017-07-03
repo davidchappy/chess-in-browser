@@ -6,7 +6,7 @@ const Messages = (props) => {
   const playerName = currentPlayer(props.white, props.black).name;
 
   const message = () => {
-    if(props.game.status == 'check') {
+    if(props.game.status === 'check') {
       return <span>  |  Check!</span>;
     } else {
       return '';

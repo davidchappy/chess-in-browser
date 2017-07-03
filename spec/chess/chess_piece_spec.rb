@@ -11,18 +11,21 @@ RSpec.describe Chess::Piece do
   let!(:queen)  { valid_game.white_pieces.where(name: "white-q").take }
 
   describe '.get_piece_moves' do
-    it 'returns hash of all moves for a piece' do
-      expect(described_class.get_piece_moves(pawn, valid_game)).to eq({"a3"=>[], "a4" => []})
+    it 'returns hash of all available moves by piece' do
+      moves = {
+        "white-n1"=>{"a3"=>[], "c3"=>[]}, 
+        "white-n2"=>{"f3"=>[], "h3"=>[]}, 
+        "white-p1"=>{"a3"=>[], "a4"=>[]},
+        "white-p2"=>{"b3"=>[], "b4"=>[]},
+        "white-p3"=>{"c3"=>[], "c4"=>[]},
+        "white-p4"=>{"d3"=>[], "d4"=>[]},
+        "white-p5"=>{"e3"=>[], "e4"=>[]},
+        "white-p6"=>{"f3"=>[], "f4"=>[]}, 
+        "white-p7"=>{"g3"=>[], "g4"=>[]}, 
+        "white-p8"=>{"h3"=>[], "h4"=>[]}, 
+      }
+      expect(described_class.get_piece_moves(valid_game)).to eq(moves)
     end
-
-    # it 'returns check flag if move would place board in check' do
-    #   board_in_check = valid_game.board
-    #   board_in_check[:c2].position = "unplaced"
-    #   board_in_check[:c2] = ""
-    #   board_in_check[:d7].position = "unplaced"
-    #   board_in_check[:d7] = ""
-    #   expect(described_class.get_piece_moves("a4", board_in_check, queen)["a4"]).to include("check")
-    # end
   end
 
   describe '#wrapped?' do

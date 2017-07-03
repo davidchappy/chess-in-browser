@@ -1,5 +1,5 @@
 class Game < ApplicationRecord
-  include PieceMethods
+  include GameUtils
   include GamePrep
   include GameUpdate
 
@@ -26,39 +26,6 @@ class Game < ApplicationRecord
   def update(move)
     update_tasks(move)
     self
-  end
-
-  def current_player
-    self.white.is_playing ? self.white : self.black
-  end
-
-  def current_pieces
-    self.current_player == self.white ? self.white_pieces : self.black_pieces
-  end
-
-  def white_pieces
-    self.pieces.where(color: "white")
-  end
-
-  def black_pieces
-    self.pieces.where(color: "black")
-  end
-
-  def find_on_board(coordinate)
-    target = self.board[coordinate.to_sym]
-    if target == "" || target.nil?
-      return ""
-    else 
-      return self.pieces.find(target.to_i)
-    end
-  end
-
-  def position_by_id(piece_id)
-    board.select{|t, val| val == piece_id.to_i}.keys[0].to_s
-  end
-
-  def find_piece_by_name(name)
-    self.pieces.select{ |piece| piece if piece.name == name}.first
   end
 
   private

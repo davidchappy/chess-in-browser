@@ -21,20 +21,16 @@ module Chess
     end
 
     # Return hash of all moves for a player given current state of game board 
-    def self.get_moves(game, player)
+    def self.get_moves(game)
       # keys: piece names
       # values: nested hash of available moves
-      player_color = game.white == player ? "white" : "black"
       all_moves = {}
-      game.pieces.each do |piece|
-        # Assign moves only to current player's pieces
-        next if piece.color != player_color
-        # If game is in check, assign moves only to King
-        next if game.status == 'check' && piece.type != 'King'
-        # Get available moves for this piece and add to all_moves hash
-        piece_moves = Chess::Piece.get_piece_moves(piece, game)
-        all_moves[piece.name] = piece_moves unless piece_moves == {} || piece_moves.nil? 
-      end
+
+      if game.status == 'check'
+        all_moves = Chess::Piece.get_check_moves(game)
+      else 
+        all_moves = Chess::Piece.get_piece_moves(game)
+      end 
 
       # get_castle_moves(game, all_moves)
       all_moves      

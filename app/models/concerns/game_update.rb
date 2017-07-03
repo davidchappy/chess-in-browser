@@ -3,7 +3,7 @@ module GameUpdate
 
   def get_moves(game)
     purge_moves(game)
-    moves = Chess::Game.get_moves(game, game.current_player)
+    moves = Chess::Game.get_moves(game)
     # If no valid moves, declare check mate
     game.status = 'check_mate' if moves.size == 0
     map_moves(game, moves)

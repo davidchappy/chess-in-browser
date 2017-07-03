@@ -12,6 +12,16 @@ exports[`rendering Game (Snapshot Test) renders without crashing 1`] = `
       className="chess-logo loading small"
       src="logo.svg"
     />
+    <div
+      className="Messages"
+    >
+      <p>
+        <span>
+          Now Playing: 
+        </span>
+        
+      </p>
+    </div>
   </div>
   <div
     className="Table"

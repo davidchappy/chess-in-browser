@@ -4,8 +4,20 @@ import { mount } from 'enzyme';
 import Header from './header';
 import Game from './header';
 
+const props = {
+  white: {
+    is_playing: true
+  },
+  black: {
+    is_playing: false
+  },
+  game: {
+    status: 'check'
+  }
+}
+
 describe('rendering Header (Snapshot Test)', () => {
-  const component = renderer.create(<Header />);
+  const component = renderer.create(<Header {...props} />);
   const json = component.toJSON();
 
   it('renders without crashing', () => {
@@ -32,7 +44,7 @@ describe('rendering Header in Welcome view', () => {
 
 describe('rendering Header in Game view', () => {
   const gameHeaderWrapper = mount(
-    <Header headerSize='small' />
+    <Header headerSize='small' {...props} />
   );
 
   it('renders not heading text', () => {

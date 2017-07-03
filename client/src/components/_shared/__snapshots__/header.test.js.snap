@@ -9,5 +9,17 @@ exports[`rendering Header (Snapshot Test) renders without crashing 1`] = `
     className="chess-logo loaded large"
     src="logo.svg"
   />
+  <div
+    className="Messages"
+  >
+    <p>
+      <span>
+        Now Playing: 
+      </span>
+      <span>
+          |  Check!
+      </span>
+    </p>
+  </div>
 </div>
 `;

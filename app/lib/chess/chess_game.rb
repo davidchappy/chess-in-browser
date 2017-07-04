@@ -61,8 +61,6 @@ module Chess
       # always move piece 
       move(new_board, piece, to)
 
-      # puts "board in chess_game.update_board"
-      # p new_board
       game.board = new_board
       game
     end
@@ -78,7 +76,6 @@ module Chess
           board_position = game.position_by_id(piece.id)
           if(board_position && piece.position != board_position)
             piece.has_moved = true
-            p board_position
             piece.position = board_position
           end
         end

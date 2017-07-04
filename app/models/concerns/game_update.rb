@@ -30,6 +30,9 @@ module GameUpdate
   end
 
   def update_board(game, move)
+    if(status == 'check' && find_on_board(move["from"]).type == 'King')
+      game.set_status
+    end
     Chess::Game.update_board(game, move).save!
   end
 

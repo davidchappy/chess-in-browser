@@ -1,0 +1,14 @@
+.captured {
+  height: 7%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 1% 0;
+}
+
+.captured li {
+  height:100%;
+  width:12.5%;
+  max-width: 6vw;
+  display: inline-block;
+  position: relative;
+}

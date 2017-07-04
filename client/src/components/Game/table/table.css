@@ -1,8 +1,7 @@
 .Table {
   background-image: url(./table.png);
-  margin-top: 90px;
-  padding-top: 8vw;
-  height: 95vh;
+  padding-top: 90px;
+  height: calc(100vh + 90px);
   position: absolute;
   bottom: 0;
   right: 0;

@@ -17,6 +17,10 @@ module GameUtils
     self.current_player == self.white ? 'white' : 'black'
   end
 
+  def other_color
+    self.current_player == self.white ? 'black' : 'white'
+  end
+
   def white_pieces
     self.pieces.where(color: "white")
   end
@@ -34,7 +38,9 @@ module GameUtils
   end
 
   def find_on_board(coordinate)
-    target = self.board[coordinate.to_sym]
+    if coordinate && coordinate != ""
+      target = self.board[coordinate.to_sym]
+    end
     if target == "" || target.nil?
       return ""
     else 

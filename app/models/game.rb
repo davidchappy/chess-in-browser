@@ -38,7 +38,7 @@ class Game < ApplicationRecord
       position_pieces(self)
       init_board(self)
       # game_update
-      set_turn(self.white, self.black)
+      set_turn
       get_moves(self)
       set_status("playing")
     end
@@ -46,7 +46,7 @@ class Game < ApplicationRecord
     def update_tasks(move)
       update_board(self, move)
       update_pieces(self)
-      set_turn(self.white, self.black)
+      set_turn
       get_moves(self)
     end
 

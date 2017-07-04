@@ -15,18 +15,18 @@ module GameUpdate
     self.save!
   end
 
-  def set_turn(white, black) 
-    if white.is_playing
-      white.is_playing = false
-      black.is_playing = true
-    elsif black.is_playing
-      white.is_playing = true
-      black.is_playing = false
+  def set_turn 
+    if self.white.is_playing
+      self.white.is_playing = false
+      self.black.is_playing = true
+    elsif self.black.is_playing
+      self.white.is_playing = true
+      self.black.is_playing = false
     else 
-      white.is_playing = true
+      self.white.is_playing = true
     end
-    white.save!
-    black.save!
+    self.white.save!
+    self.black.save!
   end
 
   def update_board(game, move)

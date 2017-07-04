@@ -6,19 +6,23 @@ const Captured = (props) => {
   let pieces;
   if(props.pieces) {
     pieces = props.pieces.map(piece => {
-      if(piece.color === props.color && piece.position == 'captured') {
+      if(piece.color === props.color && piece.position === 'captured') {
         return (
-          <li><Piece piece={piece} /></li>
+          <li key={piece.id}><Piece piece={piece} /></li>
         )
+      } else {
+        return null;
       }
     });
   } else {
     pieces = null;
   }
 
+  const classes = "captured captured-" + props.color;
+
 
   return (
-    <ul className={"captured " + "captured-" + props.color}>{pieces}</ul>
+    <ul className={classes}>{pieces}</ul>
   )
 }
 

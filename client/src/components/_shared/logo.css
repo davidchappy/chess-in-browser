@@ -8,8 +8,11 @@
 }
 
 .chess-logo.small {
-  height: 20px;
-  width: 20px;
+  height: 3vh;
+  width: 3vh;
+  padding: 1vh;
+  display: inline-block;
+  margin-right: 1vw;
 }
 
 .chess-logo.loading {

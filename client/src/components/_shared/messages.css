@@ -1,0 +1,13 @@
+.Messages {
+  min-height: 12px;
+  height: 2vh;
+  font-size: 100%;
+  display: inline-block;
+}
+
+@media screen and (max-width: 720px) and (orientation: landscape) {
+  .Messages {
+    height: 1vh;
+    font-size: 80%;
+  }
+}

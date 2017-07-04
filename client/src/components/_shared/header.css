@@ -5,9 +5,15 @@
 }
 
 .chess-header.small {
-  height: 80px;
-  padding: 5px 0 20px;
-  background-color: #3D3D3D;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  height: 10vh;
+  padding: 0.5vh 0 0;
+  background-color: transparent;
+  color: #3D3D3D;
   position: absolute;
   top: 0;
   left: 0;

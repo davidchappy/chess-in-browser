@@ -1,5 +1,6 @@
 import React from 'react';
 import { currentPlayer, otherPlayer } from '../../utils/helper';
+import './messages.css';
 
 const Messages = (props) => {
 
@@ -19,7 +20,7 @@ const Messages = (props) => {
   return (
 
     <div className="Messages">
-      <p><span>Now Playing: {player}</span>{message()}</p>
+      <span>Now Playing: {player}</span>{message()}
     </div>
 
   )

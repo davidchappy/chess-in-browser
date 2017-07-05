@@ -44,6 +44,7 @@ class Game < ApplicationRecord
     end
 
     def update_tasks(move)
+      # game_update
       update_board(self, move)
       update_pieces(self)
       set_turn

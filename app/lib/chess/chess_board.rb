@@ -31,6 +31,36 @@ module Chess
       false
     end
 
+    # Checks if tile is on direct path between start and end positions
+    def between_tiles?(tile, start_position, end_position)
+      same_file = start_position[0] == end_position[0]
+      same_rank = start_position[1] == end_position[1]
+
+      if same_file && tile[1].between?(start_position[1], end_position[1])
+        return true
+      elsif same_rank && tile[0].between?(start_position[0], end_position[0])
+        return true
+      elsif diagonal?(start_position, end_position)
+        if( diagonal?(tile, start_position) &&
+            diagonal?(tile, end_position)  &&
+            tile[0].between?(start_position[0], end_position[0]) &&
+            tile[1].between?(start_position[1], end_position[1]) )
+          return true
+        end
+      end
+      false
+    end
+
+    def diagonal?(start_position, end_position)
+      start_file = start_position[0].ord
+      start_rank = start_position[1].to_i
+      end_file   = end_position[0].ord
+      end_rank   = end_position[1].to_i
+
+      return true if (start_file - end_file).abs == (start_rank - end_rank).abs
+      false
+    end
+
     def en_passant?(pawn, game)
       board = game.board
       if pawn.type == "Pawn"

@@ -21,13 +21,13 @@ module Chess
     end
 
     # Return hash of all moves for a player given current state of game board 
-    def self.get_moves(game)
+    def self.get_moves(game, last_move=nil)
       # keys: piece names
       # values: nested hash of available moves
       all_moves = {}
 
       if game.status == 'check'
-        all_moves = Chess::Piece.get_check_moves(game)
+        all_moves = Chess::Piece.get_check_moves(game, last_move)
       else 
         all_moves = Chess::Piece.get_piece_moves(game)
       end 

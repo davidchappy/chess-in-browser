@@ -56,23 +56,32 @@ module Chess
       all_moves
     end
 
-    def self.get_check_moves(game)
+    def self.get_check_moves(game, last_move)
       all_moves = {}
-      danger_tiles = []
       piece_logic = Chess::Piece.new
+      attacker = game.find_on_board(last_move["to"])
+      p attacker
+      
+      attacker_type = piece_logic.get_type(attacker)
+      attacker_moves = attacker_type.moves(attacker, game)
       
       # Find king and his possible moves/tiles
       king = game.current_color == 'white' ? game.white_king : game.black_king
       king_moves = Chess::Piece::King.new.moves(king, game)
       king_tiles = king_moves.map{ |t,f| t  }
       
-      # Loop through other player's possible moves to limit king's moves
-      game.other_pieces.each do |piece|
-        next if piece.position == 'captured'
-        piece_type = piece_logic.get_type(piece)
-        piece_moves = piece_type.moves(piece, game)
-        piece_moves.each do |tile, flags|
-          king_moves.delete(tile) if king_tiles.include?(tile)
+      attacker_moves.each do |tile, flags|
+        king_moves.delete(tile) if king_tiles.include?(tile) || tile == king.position
+        game.current_pieces.each do |piece|
+          next if piece.type == 'King'
+          piece_type = piece_logic.get_type(piece)
+          piece_moves = piece_type.moves(piece, game)
+          piece_moves.each do |tile, flags|
+            if piece_logic.blocks_path?(tile, attacker, king)
+              all_moves[piece.name] ||= {}
+              all_moves[piece.name].merge!({ tile => flags })
+            end
+          end
         end
       end
 
@@ -194,6 +203,19 @@ module Chess
       else 
         return false
       end
+      false
+    end
+
+    def blocks_path?(tile, attacker, attacked)
+      path_types = ["Rook", "Bishop", "Queen"]
+      between = false
+
+      if path_types.include?(attacker.type) 
+        puts "found a path type"
+        between = chess_board.between_tiles?(tile, attacker.position, attacked.position)
+      end
+
+      return true if between || tile == attacker.position
       false
     end
 

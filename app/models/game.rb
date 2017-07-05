@@ -47,7 +47,7 @@ class Game < ApplicationRecord
       update_board(self, move)
       update_pieces(self)
       set_turn
-      get_moves(self)
+      get_moves(self, move)
     end
 
 end

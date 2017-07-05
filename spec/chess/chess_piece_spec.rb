@@ -2,6 +2,7 @@ require 'rails_helper'
 require 'chess/chess'
 
 RSpec.describe Chess::Piece do
+  let(:piece_logic) { Chess::Piece.new }
   let!(:valid_game) { create(:game) }
   let!(:pawn)   { valid_game.white_pieces.where(name: "white-p1").take }
   let!(:rook)   { valid_game.white_pieces.where(name: "white-r1").take }
@@ -62,6 +63,25 @@ RSpec.describe Chess::Piece do
       piece = queen
       move = "h5"
       expect(described_class.new.check?(piece, move, valid_game)).to eq(true)
+    end
+  end
+
+  describe '#filter_king_moves' do
+    it "removes moves for king if they place him in danger" do      
+      attacker = valid_game.pieces.where(name: 'black-q').first
+      attacker.position = 'h4'
+      attacker.save!
+      valid_game.board[:h4] = attacker.id
+      valid_game.board[:f2] = ""
+      valid_game.board[:d2] = ""
+      valid_game.save!
+
+      king_moves = Chess::Piece::King.new.moves(king, valid_game)
+      expect(king_moves.keys).to eq(['d2', 'f2'])
+
+      filtered_moves = piece_logic.filter_king_moves(king_moves, valid_game)
+      expect(filtered_moves).to include('d2')
+      expect(filtered_moves).to_not include('f2')
     end
   end
 

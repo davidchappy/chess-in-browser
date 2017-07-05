@@ -30,7 +30,7 @@ module GameUpdate
   end
 
   def update_board(game, move)
-    game.set_status if status == 'check' && !move["flags"].include?("check")
+    game.set_status('playing') if status == 'check' && !move["flags"].include?("check")
     Chess::Game.update_board(game, move).save!
   end
 

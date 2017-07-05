@@ -37,6 +37,10 @@ module GameUtils
     self.pieces.select{|piece| piece if piece.name == 'black-k'}.first
   end
 
+  def current_king
+    self.pieces.select{|piece| piece if piece.type == 'King' && piece.color == current_color}.first
+  end
+
   def find_on_board(coordinate)
     if coordinate && coordinate != ""
       target = self.board[coordinate.to_sym]

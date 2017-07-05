@@ -28,17 +28,21 @@ module Chess
     def self.get_piece_moves(game)
       board = game.board
       all_moves = {}
+      piece_logic = Chess::Piece.new
 
-      game.pieces.each do |piece|
-        # Assign moves only to current player's pieces
-        next if piece.color != game.current_color
-
+      game.current_pieces.each do |piece|
         # Don't get moves for a captured piece
         next if piece.position == 'captured'
 
-        # If game is in check, assign (limited) moves only to King
-        piece_type = Chess::Piece.new.get_type(piece)
-        piece_moves = piece_type.moves(piece, game)
+        # If game is in check, assign (limited) moves
+        piece_type = piece_logic.get_type(piece)
+        if piece.type == 'King'
+          king_moves = piece_type.moves(piece, game)
+          piece_moves = piece_logic.filter_king_moves(king_moves, game)
+          p piece_moves
+        else
+          piece_moves = piece_type.moves(piece, game)
+        end 
         piece_moves.each do |destination, flags|
           if Chess::Piece.new.check?(piece, destination, game)
             flags << "check" 
@@ -47,6 +51,7 @@ module Chess
             flags << "capturing" 
           end
         end 
+
         # Get available moves for this piece and add to all_moves hash
         all_moves[piece.name] = piece_moves unless piece_moves == {} || piece_moves.nil? 
       end
@@ -60,22 +65,21 @@ module Chess
       all_moves = {}
       piece_logic = Chess::Piece.new
       attacker = game.find_on_board(last_move["to"])
-      p attacker
+      king = game.current_king
       
       attacker_type = piece_logic.get_type(attacker)
       attacker_moves = attacker_type.moves(attacker, game)
       
-      # Find king and his possible moves/tiles
-      king = game.current_color == 'white' ? game.white_king : game.black_king
-      king_moves = Chess::Piece::King.new.moves(king, game)
-      king_tiles = king_moves.map{ |t,f| t  }
-      
       attacker_moves.each do |tile, flags|
-        king_moves.delete(tile) if king_tiles.include?(tile) || tile == king.position
         game.current_pieces.each do |piece|
-          next if piece.type == 'King'
+          next if piece.position == 'captured'
           piece_type = piece_logic.get_type(piece)
-          piece_moves = piece_type.moves(piece, game)
+          if piece.type == 'King'
+            king_moves = piece_type.moves(piece, game)
+            piece_moves = piece_logic.filter_king_moves(king_moves, game)
+          else
+            piece_moves = piece_type.moves(piece, game)
+          end 
           piece_moves.each do |tile, flags|
             if piece_logic.blocks_path?(tile, attacker, king)
               all_moves[piece.name] ||= {}
@@ -85,7 +89,6 @@ module Chess
         end
       end
 
-      all_moves[king.name] = king_moves
       all_moves
     end
 
@@ -147,6 +150,10 @@ module Chess
       pieces = game.pieces
       coordinates = []
       current_position_index = coord_to_index(piece, board)
+      if current_position_index.nil?
+        byebug
+      end
+
 
       offsets.each do |offset|
         adjusted_index = current_position_index + offset
@@ -164,7 +171,7 @@ module Chess
     # helper to convert coordinate to index
     def coord_to_index(piece, board)
       all_coordinates = board.keys
-      index = all_coordinates.index(piece.position.to_sym)    
+      index = all_coordinates.index(piece.position.to_sym)      
     end
 
     # helper to ensure possible moves don't include wrapped tiles
@@ -211,12 +218,24 @@ module Chess
       between = false
 
       if path_types.include?(attacker.type) 
-        puts "found a path type"
         between = chess_board.between_tiles?(tile, attacker.position, attacked.position)
       end
 
       return true if between || tile == attacker.position
       false
+    end
+
+    def filter_king_moves(king_moves, game)
+      game.other_pieces.each do |piece|
+        next if piece.position == 'captured'
+        piece_type = Chess::Piece.new.get_type(piece)
+        piece_moves = piece_type.moves(piece, game)
+        piece_moves.each do |tile, flags|
+          king_tiles = king_moves.map{ |t,f| t  }
+          king_moves.delete(tile) if king_tiles.include?(tile)
+        end
+      end
+      king_moves
     end
 
     # Piece moves stored in pieces/piece_*.rb

@@ -49,7 +49,7 @@ module Chess
       case 
       when flags.nil? || flags.empty? || flags == "" || flags == [""]
       when flags.include?("check")
-        game.set_status("check")
+        game.status = ("check")
       when flags.include?("castling")
         castle(new_board, piece, to)
       when flags.include?("en_passant")

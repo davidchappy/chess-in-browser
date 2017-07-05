@@ -58,11 +58,11 @@
 }
 
 .queen.white {
-  background-image: url('./img/white_king.svg');
+  background-image: url('./img/white_queen.svg');
 }
 
 .queen.black {
-  background-image: url('./img/black_king.svg');
+  background-image: url('./img/black_queen.svg');
 }
 
 .bishop.white {

@@ -73,6 +73,19 @@ RSpec.describe Chess::Game do
     end
   end
 
+  describe '#castle' do
+    it "updates board with ids of moved king and rook" do
+      board = valid_game.board
+      board[:g1] = board[:f1] = ""
+      king = valid_game.current_king
+      rook = valid_game.pieces.where(name: 'white-r2').take
+      to = 'g1'
+      described_class.castle(to, king, board)
+      expect(board[:g1]).to eq(king.id) 
+      expect(board[:f1]).to eq(rook.id) 
+    end
+  end
+
 end
 
 

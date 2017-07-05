@@ -39,7 +39,6 @@ module Chess
         if piece.type == 'King'
           king_moves = piece_type.moves(piece, game)
           piece_moves = piece_logic.filter_king_moves(king_moves, game)
-          p piece_moves
         else
           piece_moves = piece_type.moves(piece, game)
         end 

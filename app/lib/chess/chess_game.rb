@@ -32,7 +32,7 @@ module Chess
         all_moves = Chess::Piece.get_piece_moves(game)
       end 
 
-      # get_castle_moves(game, all_moves)
+      get_castle_moves(game, all_moves)
       all_moves      
     end
 
@@ -51,9 +51,9 @@ module Chess
       when flags.include?("check")
         game.status = ("check")
       when flags.include?("castling")
-        castle(new_board, piece, to)
+        castle(to, piece, new_board)
       when flags.include?("en_passant")
-        en_passant(new_board, piece, to)
+        en_passant(to, piece, new_board, game)
       when flags.include?("promotion")
         game.status = "promoting"
       end
@@ -141,40 +141,43 @@ module Chess
       end
 
       # Move helpers
-      def castle(board, piece, to)
+      def castle(to, piece, board)
         king = piece
         case king.color
         when 'white'
           board[:e1] = ""
           if to == 'g1'
-            rook = board[:h1]
+            rook_id = board[:h1]
             board[:h1] = ""
-            board[:f1] = rook
-            board[:g1] = king
+            board[:f1] = rook_id
+            board[:g1] = king.id
           elsif to == 'c1'
-            rook = board[:a1]
+            rook_id = board[:a1]
             board[:a1] = ""
-            board[:d1] = rook
-            board[:c1] = king
+            board[:d1] = rook_id
+            board[:c1] = king.id
           end
         when 'black'
           board[:e8] = ""
           if to == 'g8'
-            rook = board[:h8]
+            rook_id = board[:h8]
             board[:h8] = ""
-            board[:f8] = rook
-            board[:g8] = king
+            board[:f8] = rook_id
+            board[:g8] = king.id
           elsif to == 'c8'
-            rook = board[:a8]
+            rook_id = board[:a8]
             board[:a8] = ""
-            board[:d8] = rook
-            board[:c8] = king
+            board[:d8] = rook_id
+            board[:c8] = king.id
           end
         end
       end
 
-      def en_passant(board, piece, to)
-        
+      def en_passant(to, piece, board, game)
+        board[to.to_sym] = piece.id
+        board[piece.position.to_sym] = ""
+        target = Chess::Board.new.check_en_passant(piece, game)
+        board[target.to_sym] = "" 
       end
 
       def move(board, piece, to)

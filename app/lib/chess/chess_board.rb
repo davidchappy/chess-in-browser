@@ -61,7 +61,7 @@ module Chess
       false
     end
 
-    def en_passant?(pawn, game)
+    def check_en_passant(pawn, game)
       board = game.board
       if pawn.type == "Pawn"
         col_as_num = pawn.position[0].ord
@@ -69,11 +69,11 @@ module Chess
         right_position = "#{(col_as_num+1).chr}#{row}"
         left_position = "#{(col_as_num-1).chr}#{row}"
         if pawn.color == "white" && row == "5"
-          return true if !board[right_position.to_sym].nil? && is_enemy?(right_position, pawn.color, game) 
-          return true if !board[left_position.to_sym].nil? && is_enemy?(left_position, pawn.color, game) 
+          return right_position if !board[right_position.to_sym].nil? && is_enemy?(right_position, pawn.color, game) 
+          return left_position if !board[left_position.to_sym].nil? && is_enemy?(left_position, pawn.color, game) 
         elsif pawn.color == "black" && row == "4"
-          return true if !board[right_position.to_sym].nil? && is_enemy?(right_position, pawn.color, game) 
-          return true if !board[left_position.to_sym].nil? && is_enemy?(left_position, pawn.color, game) 
+          return right_position if !board[right_position.to_sym].nil? && is_enemy?(right_position, pawn.color, game) 
+          return left_position if !board[left_position.to_sym].nil? && is_enemy?(left_position, pawn.color, game) 
         end
       end
       false
@@ -83,9 +83,9 @@ module Chess
       castleable = {}
       board = game.board
       player = game.current_player
-      color = game.current_player == game.white ? "white" : "black"
-      pieces = color == "white" ? game.white_pieces : game.black_pieces
-      king = pieces.select{ |p| p if p.type == "King" }[0]
+      color = game.current_color
+      pieces = game.current_pieces
+      king = game.current_king
       castleable[king.name] = {}
 
       rooks = pieces.select{ |p| p if p.type == "Rook" }
@@ -113,10 +113,10 @@ module Chess
         return {}
       when rooks.length
         if left_side.all?{ |t| board[t] == "" } && !left_rook.has_moved
-          castleable[king.name].merge!( { left_to.to_s => "castling" } )
+          castleable[king.name].merge!( { left_to.to_s => ["castling"] } )
         end
         if right_side.all?{ |t| board[t] == "" } && !right_rook.has_moved
-          castleable[king.name].merge!( { right_to.to_s => "castling" } )
+          castleable[king.name].merge!( { right_to.to_s => ["castling"] } )
         end
       else
         return {}

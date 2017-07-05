@@ -29,18 +29,18 @@ RSpec.describe Chess::Board do
       player = game.current_player
       king_name = game.current_pieces.select{|p| p if p.type == "King"}.first.name
       castle_moves = board_logic.castle_moves(game)
-      expect(castle_moves[king_name]).to eq({ "g1" => "castling" })
+      expect(castle_moves[king_name]).to eq({ "g1" => ["castling"] })
     end
 
     it "returns a black king's valid castle moves when available" do
       game = valid_game
-      game.set_turn(game.white, game.black)
+      game.set_turn
       player = game.current_player
       game.board[:g8] = game.board[:f8] = ""
 
       king_name = game.current_pieces.select{|p| p if p.type == "King"}.first.name
       castle_moves = board_logic.castle_moves(game)
-      expect(castle_moves[king_name]).to eq({ "g8" => "castling" })
+      expect(castle_moves[king_name]).to eq({ "g8" => ["castling"] })
     end
   end
 end

@@ -68,10 +68,10 @@ module Chess
         row = pawn.position[1]
         right_position = "#{(col_as_num+1).chr}#{row}"
         left_position = "#{(col_as_num-1).chr}#{row}"
-        if pawn.color == "white" && row == "5"
+        if pawn.color == "white" && row == "4"
           return right_position if !board[right_position.to_sym].nil? && is_enemy?(right_position, pawn.color, game) 
           return left_position if !board[left_position.to_sym].nil? && is_enemy?(left_position, pawn.color, game) 
-        elsif pawn.color == "black" && row == "4"
+        elsif pawn.color == "black" && row == "5"
           return right_position if !board[right_position.to_sym].nil? && is_enemy?(right_position, pawn.color, game) 
           return left_position if !board[left_position.to_sym].nil? && is_enemy?(left_position, pawn.color, game) 
         end

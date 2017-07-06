@@ -146,13 +146,11 @@ module Chess
     # returns list of tiles matching key offsets or string if singular
     def offsets_to_coordinates(offsets, piece, game)
       board = game.board
-      pieces = game.pieces
       coordinates = []
       current_position_index = coord_to_index(piece, board)
       if current_position_index.nil?
         byebug
       end
-
 
       offsets.each do |offset|
         adjusted_index = current_position_index + offset

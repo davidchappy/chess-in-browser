@@ -3,7 +3,6 @@ class Game < ApplicationRecord
   include GamePrep
   include GameUpdate
 
-  after_create :start_tasks
   serialize :board
 
   # Associations
@@ -21,10 +20,15 @@ class Game < ApplicationRecord
 
   def self.start(white, black)
     game = Game.create!(white: white, black: black, status: "starting")
+    start_tasks
+    # game_state = GameState.create_state(game)??
     game
   end
 
   def update(move)
+    # game_state = GameState.create_state(self)
+    # update_tasks(game_state)
+    # game_state.update_from_state
     update_tasks(move)
     self
   end
@@ -38,6 +42,7 @@ class Game < ApplicationRecord
       generate_pieces
       generate_board
       # game_update
+      # 
       set_turn
       get_moves
       set_status("playing")

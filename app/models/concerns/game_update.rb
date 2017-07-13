@@ -2,6 +2,8 @@ module GameUpdate
   extend ActiveSupport::Concern
 
   def get_moves(last_move=nil)
+    # 
+    # move_definitions = Chess::Game.describe_moves(game_state)
     purge_moves
     moves = Chess::Game.get_moves(self, last_move)
     # If no valid moves, declare check mate

@@ -42,6 +42,7 @@ class GameState
         end
       end
     end
+    game
   end
 
   def current_player

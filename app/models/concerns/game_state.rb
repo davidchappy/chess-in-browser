@@ -34,11 +34,11 @@ class GameState
       piece = pieces.find(piece_hash[:id])
       piece_attributes = [:id, :position, :name, :color, :has_moved, :type]
       update_with_hash(piece, piece_attributes, state[:pieces][i])
+      
+      piece.moves.destroy_all if piece.moves.length > 0
       if piece_hash[:moves].length > 0
         piece_hash[:moves].each_with_index do |move_hash, j|
-          move = Move.find(move_hash[:id])
-          move_attributes = [:id, :flags, :to, :from]
-          update_with_hash(move, move_attributes, state[:pieces][i][:moves][j])
+          piece.moves.create(state[:pieces][i][:moves][j])
         end
       end
     end

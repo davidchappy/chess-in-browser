@@ -39,16 +39,16 @@ class Game < ApplicationRecord
       generate_board
       # game_update
       set_turn
-      get_moves(self)
+      get_moves
       set_status("playing")
     end
 
     def update_tasks(move)
       # game_update
-      update_board(self, move)
-      update_pieces(self)
+      update_board(move)
+      update_pieces
       set_turn
-      get_moves(self, move)
+      get_moves(move)
     end
 
 end

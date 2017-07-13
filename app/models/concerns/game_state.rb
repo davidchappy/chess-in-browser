@@ -1,6 +1,4 @@
-class GameState < Hash
-  # include ActiveModel::Serialization
-
+class GameState
   attr_accessor :state
 
   def self.create_state(game_object)
@@ -44,6 +42,69 @@ class GameState < Hash
         end
       end
     end
+  end
+
+  def current_player
+    state[:white][:is_playing] ? state[:white] : state[:black]
+  end
+
+  def current_pieces
+    current_player == state[:white] ? white_pieces : black_pieces
+  end
+
+  def other_pieces
+    current_player == state[:white] ? black_pieces : white_pieces
+  end
+
+  def current_color
+    current_player == state[:white] ? 'white' : 'black'
+  end
+
+  def other_color
+    current_player == state[:white] ? 'black' : 'white'
+  end
+
+  def white_pieces
+    state[:pieces].select{|piece| piece[:color] == 'white'}
+  end
+
+  def black_pieces
+    state[:pieces].select{|piece| piece[:color] == 'black'}
+  end
+
+  def white_king
+    state[:pieces].select{|piece| piece[:name] == 'white-k'}.first
+  end
+
+  def black_king
+    state[:pieces].select{|piece| piece[:name] == 'black-k'}.first
+  end
+
+  def current_king
+    state[:pieces].select{|piece| piece[:type] == 'King' && piece[:color] == current_color}.first
+  end
+
+  def find_on_board(coordinate)
+    if coordinate && coordinate != ""
+      target = state[:board][coordinate.to_sym]
+    end
+    if target == "" || target.nil?
+      return ""
+    else 
+      return find_piece_by_id(target.to_i)
+    end
+  end
+
+  def position_by_id(piece_id)
+    state[:board].select{|t, val| val.to_i == piece_id}.keys[0].to_s
+  end
+
+  def find_piece_by_name(name)
+    state[:pieces].select{ |piece| piece[:name] == name}.first
+  end
+
+  def find_piece_by_id(id)
+    state[:pieces].select{|piece| piece[:id] == id}.first
   end
 
   private

@@ -21,6 +21,8 @@ class Game < ApplicationRecord
 
   def self.start(white, black)
     game = Game.create!(white: white, black: black, status: "starting")
+    state = GameState.create_state(game)
+    byebug
     game
   end
 

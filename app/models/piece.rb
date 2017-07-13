@@ -1,6 +1,7 @@
 class Piece < ApplicationRecord
   belongs_to :game
   has_many   :moves, dependent: :destroy, autosave: true
+  accepts_nested_attributes_for :moves
 
   validates_presence_of :position
   validates_inclusion_of :type, in: ["King", "Queen", "Bishop", "Knight", "Rook", "Pawn"]

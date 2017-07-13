@@ -11,6 +11,7 @@ class Game < ApplicationRecord
   belongs_to :black, polymorphic: true
   has_many   :pieces, dependent: :destroy, autosave: true
 
+  accepts_nested_attributes_for :pieces
 
   # Validations
   validates_inclusion_of :status,

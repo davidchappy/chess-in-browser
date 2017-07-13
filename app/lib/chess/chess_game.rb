@@ -9,7 +9,7 @@ module Chess
 
     # Generate and return a board hash
     def self.describe_board
-      generate_board 
+      chess_board.generate_board_definition
     end
 
     # Return hash of all moves for a player given current state of game board 
@@ -86,21 +86,6 @@ module Chess
         end
         all_moves
       end 
-
-      def generate_board
-        board = {}
-        8.downto(1).each do |number|
-          fill_row(number, board)
-        end
-        board
-      end
-
-      def fill_row(num, board)
-        letters=("a".."h").to_a
-        letters.each do |letter|
-          board[(letter + num.to_s).to_sym] = ""
-        end
-      end
 
       # Move helpers
       def castle(to, piece, board)

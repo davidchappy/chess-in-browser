@@ -2,6 +2,14 @@ module Chess
 
   class Board
 
+    def generate_board_definition
+      board = {}
+      8.downto(1).each do |number|
+        fill_row(number, board)
+      end
+      board
+    end
+
     def valid_tile?(coordinate, game)
       board = game.board
       return true if !coordinate.nil? && board.keys.include?(coordinate.to_sym)
@@ -128,6 +136,15 @@ module Chess
         return castleable
       end
     end # end castle_moves
+        
+    private 
+
+      def fill_row(num, board)
+        letters=("a".."h").to_a
+        letters.each do |letter|
+          board[(letter + num.to_s).to_sym] = ""
+        end
+      end
 
   end
 

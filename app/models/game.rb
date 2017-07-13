@@ -21,8 +21,6 @@ class Game < ApplicationRecord
 
   def self.start(white, black)
     game = Game.create!(white: white, black: black, status: "starting")
-    state = GameState.create_state(game)
-    byebug
     game
   end
 
@@ -37,9 +35,8 @@ class Game < ApplicationRecord
     
     def start_tasks
       # game_prep
-      game = generate_pieces(self).save!
-      position_pieces(self)
-      init_board(self)
+      generate_pieces
+      generate_board
       # game_update
       set_turn
       get_moves(self)
